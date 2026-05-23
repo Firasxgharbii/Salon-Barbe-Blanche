@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --page: #ddd1bc;
-  --ink: #5b3c11;
+  --page: #d9d9d6;
+  --ink: #3f434a;
 
-  --footer-bg: #050505;
-  --footer-text: #f5f1ea;
-  --footer-muted: rgba(255, 255, 255, 0.58);
-  --footer-soft: rgba(255, 255, 255, 0.38);
-  --footer-line: rgba(255, 255, 255, 0.1);
+  --footer-bg: #111214;
+  --footer-text: #f3f4f6;
+  --footer-muted: rgba(255, 255, 255, 0.62);
+  --footer-soft: rgba(255, 255, 255, 0.4);
+  --footer-line: rgba(255, 255, 255, 0.12);
 
-  --accent: #ff4d1a;
-  --accent-strong: #ff2d14;
+  --accent: #aeb4bc;
+  --accent-strong: #8f969f;
 
-  --soft-bg: #ece9e6;
-  --soft-card: #f5f3f1;
-  --soft-line: rgba(0, 0, 0, 0.12);
-  --soft-text: rgba(0, 0, 0, 0.72);
-  --soft-muted: rgba(0, 0, 0, 0.46);
+  --soft-bg: #eceef1;
+  --soft-card: #f5f6f7;
+  --soft-line: rgba(63, 67, 74, 0.12);
+  --soft-text: rgba(63, 67, 74, 0.78);
+  --soft-muted: rgba(63, 67, 74, 0.52);
 
-  --success-soft: #909657;
-  --peach: #f08a4b;
-  --rose: #ff5b68;
+  --success-soft: #a8adb3;
+  --peach: #c7ccd2;
+  --rose: #b8bec6;
 }
 
 html {
@@ -117,14 +117,7 @@ video {
 }
 
 /* Glow */
-.footer-glow-left {
-  background: radial-gradient(
-    circle,
-    rgba(122, 18, 0, 0.18) 0%,
-    rgba(122, 18, 0, 0.08) 30%,
-    transparent 70%
-  );
-}
+
 
 .footer-glow-right {
   background: radial-gradient(
@@ -262,7 +255,7 @@ video {
   );
 }
 
-/* Animations */
+/* Animations générales */
 .reveal-up {
   opacity: 0;
   transform: translateY(40px);
@@ -324,10 +317,36 @@ button:focus-visible {
   border-radius: 999px;
 }
 
-.font-display {
-  font-family: var(--font-serif), serif;
+/* Silver logo animé */
+.silver-logo {
+  background: linear-gradient(
+    115deg,
+    #6f6f73 0%,
+    #bfc2c9 18%,
+    #f3f4f6 34%,
+    #9ea3ab 50%,
+    #f8fafc 64%,
+    #8a8f97 82%,
+    #d8dbe2 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: silverShine 4.2s linear infinite;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
-.font-sans-modern {
-  font-family: var(--font-sans), sans-serif;
+@keyframes silverShine {
+  0% {
+    background-position: 200% 0;
+    filter: brightness(0.96);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+  100% {
+    background-position: -20% 0;
+    filter: brightness(0.96);
+  }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type PortfolioItem = {
   id: number;
@@ -10,24 +10,28 @@ type PortfolioItem = {
 };
 
 const portfolioItems: PortfolioItem[] = [
-  { id: 1, image: "/gallery/1.jpg", title: "Coupe signature", category: "Barbe Blanche" },
-  { id: 2, image: "/gallery/2.jpg", title: "Dégradé moderne", category: "Salon Premium" },
-  { id: 3, image: "/gallery/3.jpg", title: "Finition précise", category: "Style & détail" },
-  { id: 4, image: "/gallery/4.jpg", title: "Look élégant", category: "Coupe homme" },
-  { id: 5, image: "/gallery/5.jpg", title: "Barbe sculptée", category: "Barbe" },
-  { id: 6, image: "/gallery/6.jpg", title: "Texture naturelle", category: "Signature" },
-  { id: 7, image: "/gallery/7.jpg", title: "Coupe clean", category: "Montréal" },
-  { id: 8, image: "/gallery/8.jpg", title: "Style classique", category: "Premium" },
-  { id: 9, image: "/gallery/9.jpg", title: "Look urbain", category: "Studio" },
-  { id: 10, image: "/gallery/10.jpg", title: "Contour net", category: "Coupe & barbe" },
-  { id: 11, image: "/gallery/11.jpg", title: "Dégradé fondu", category: "Fade" },
-  { id: 12, image: "/gallery/12.jpg", title: "Style soigné", category: "Barber art" },
-  { id: 13, image: "/gallery/13.jpg", title: "Profil premium", category: "Luxury cut" },
-  { id: 14, image: "/gallery/14.jpg", title: "Expression moderne", category: "Editorial" },
-  { id: 15, image: "/gallery/15.jpeg", title: "Coupe structurée", category: "Barbe Blanche" },
-  { id: 16, image: "/gallery/16.jpeg", title: "Visuel salon", category: "Interior" },
-  { id: 17, image: "/gallery/17.jpeg", title: "Ambiance premium", category: "Atmosphere" },
-  { id: 18, image: "/gallery/18.jpeg", title: "Détail & matière", category: "Design" },
+  { id: 1, image: "/gallery/1.JPG", title: "Coupe signature", category: "Barbe Blanche" },
+  { id: 2, image: "/gallery/2.JPG", title: "Dégradé moderne", category: "Salon Premium" },
+  { id: 3, image: "/gallery/3.JPG", title: "Finition précise", category: "Style & détail" },
+  { id: 4, image: "/gallery/4.JPG", title: "Look élégant", category: "Coupe homme" },
+
+  { id: 5, image: "/gallery/Barbe Blanche-14.JPG", title: "Barbe sculptée", category: "Barbe" },
+  { id: 6, image: "/gallery/Barbe Blanche-41.JPG", title: "Texture naturelle", category: "Signature" },
+  { id: 7, image: "/gallery/10.JPG", title: "Coupe clean", category: "Montréal" },
+  { id: 8, image: "/gallery/Barbe Blanche-74.JPG", title: "Style classique", category: "Premium" },
+  { id: 9, image: "/gallery/Barbe Blanche-75.JPG", title: "Look urbain", category: "Studio" },
+  { id: 10, image: "/gallery/Barbe Blanche-76.JPG", title: "Contour net", category: "Coupe & barbe" },
+  { id: 11, image: "/gallery/Barbe Blanche-77.JPG", title: "Dégradé fondu", category: "Fade" },
+  { id: 12, image: "/gallery/Barbe Blanche-46.JPG", title: "Style soigné", category: "Barber art" },
+  { id: 13, image: "/gallery/Barbe Blanche-78.JPG", title: "Profil premium", category: "Luxury cut" },
+  { id: 14, image: "/gallery/Barbe Blanche-79.JPG", title: "Expression moderne", category: "Editorial" },
+  { id: 15, image: "/gallery/Barbe Blanche-86.JPG", title: "Coupe structurée", category: "Barbe Blanche" },
+  { id: 16, image: "/gallery/Barbe Blanche-87.JPG", title: "Visuel salon", category: "Interior" },
+  { id: 17, image: "/gallery/Barbe Blanche-88.JPG", title: "Ambiance premium", category: "Atmosphere" },
+  { id: 18, image: "/gallery/Barbe Blanche-89.JPG", title: "Détail & matière", category: "Design" },
+  { id: 19, image: "/gallery/Barbe Blanche-91.JPG", title: "Coupe raffinée", category: "Premium cut" },
+  { id: 20, image: "/gallery/Barbe Blanche-92.JPG", title: "Ligne précise", category: "Sharp look" },
+  { id: 21, image: "/gallery/Barbe Blanche-93.JPG", title: "Style distinctif", category: "Modern barber" },
 ];
 
 function ArrowLeftIcon() {
@@ -82,6 +86,9 @@ function ArrowRightIcon() {
 
 export default function PortfolioSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   const activeItem = useMemo(() => portfolioItems[activeIndex], [activeIndex]);
   const total = portfolioItems.length;
@@ -94,63 +101,110 @@ export default function PortfolioSection() {
     setActiveIndex((prev) => (prev === total - 1 ? 0 : prev + 1));
   };
 
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev === total - 1 ? 0 : prev + 1));
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [total, isPaused]);
+
+  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return;
+
+    const distance = touchStartX.current - touchEndX.current;
+
+    if (distance > 50) {
+      goNext();
+    } else if (distance < -50) {
+      goPrev();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
   return (
     <section
       id="portfolio"
-      className="bg-[var(--page)] px-4 py-8 sm:px-6 lg:px-8 lg:py-10"
+      className="bg-[var(--page)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-14"
     >
       <div className="mx-auto max-w-[1680px]">
-        <div className="rounded-[32px] bg-black p-4 sm:p-5 lg:p-6">
-          <div className="grid gap-0 overflow-hidden rounded-[28px] bg-black lg:grid-cols-[1.15fr_0.45fr]">
-            {/* LEFT IMAGE */}
-            <div className="relative min-h-[620px] lg:min-h-[760px]">
+        <div className="rounded-[28px] bg-black p-3 shadow-[0_18px_70px_rgba(0,0,0,0.14)] sm:rounded-[34px] sm:p-5 lg:p-6">
+          <div className="overflow-hidden rounded-[24px] bg-black lg:grid lg:grid-cols-[1.18fr_0.44fr] lg:rounded-[30px]">
+            {/* IMAGE SIDE */}
+            <div
+              className="group relative min-h-[620px] sm:min-h-[720px] lg:min-h-[760px] xl:min-h-[820px]"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
               <img
+                key={activeItem.image}
                 src={activeItem.image}
                 alt={activeItem.title}
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full scale-[1.01] object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
               />
 
-              <div className="absolute inset-0 bg-black/30" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/10" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent" />
+              {/* overlays */}
+              <div className="absolute inset-0 bg-black/28" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/36 via-transparent to-black/70" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/28 via-transparent to-black/12" />
 
-              {/* TITLE */}
-              <div className="absolute left-6 top-6 z-10 sm:left-8 sm:top-8 md:left-10 md:top-10">
-                <div className="text-[60px] font-[800] leading-[0.88] tracking-[-0.07em] text-white sm:text-[86px] md:text-[100px] lg:text-[110px]">
+              {/* small label */}
+              <div className="absolute left-5 top-5 z-20 sm:left-8 sm:top-8 lg:left-10 lg:top-10">
+                <span className="inline-flex items-center rounded-full border border-white/10 bg-black/35 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.22em] text-white/75 backdrop-blur-md sm:px-4 sm:py-2 sm:text-[12px]">
+                  Expression moderne
+                </span>
+              </div>
+
+              {/* title */}
+              <div className="absolute left-5 top-20 z-20 sm:left-8 sm:top-24 lg:left-10 lg:top-24 xl:left-12">
+                <h2 className="text-[54px] font-[900] leading-[0.86] tracking-[-0.085em] text-white sm:text-[78px] md:text-[92px] lg:text-[108px] xl:text-[126px]">
                   Notre
-                </div>
+                </h2>
 
-                <div className='-mt-3 text-[56px] italic leading-[0.9] tracking-[-0.04em] text-white sm:text-[74px] md:text-[88px] lg:text-[96px] font-["var(--font-serif)"]'>
+                <div className="-mt-2 text-[52px] italic leading-[0.84] tracking-[-0.06em] text-white sm:text-[72px] md:text-[82px] lg:text-[94px] xl:text-[106px]">
                   Portfolio
                 </div>
               </div>
 
-              {/* BOTTOM CONTROLS */}
-              <div className="absolute bottom-6 left-6 right-6 z-10 sm:bottom-8 sm:left-8 sm:right-8 md:bottom-10 md:left-10 md:right-10">
-                <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
-                  {/* badges */}
+              {/* desktop controls */}
+              <div className="absolute bottom-8 left-5 right-5 z-20 hidden sm:block lg:left-10 lg:right-10 lg:bottom-10 xl:left-12 xl:right-12">
+                <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
                   <div className="flex flex-wrap gap-3">
-                    <span className="inline-flex rounded-full border border-white/10 bg-black/35 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
+                    <span className="inline-flex items-center rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-medium text-white backdrop-blur-md transition duration-300 hover:bg-black/50">
                       {activeItem.category}
                     </span>
 
-                    <span className="inline-flex rounded-full border border-white/10 bg-black/35 px-4 py-2 text-sm font-medium text-white/92 backdrop-blur-sm">
+                    <span className="inline-flex items-center rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-medium text-white/95 backdrop-blur-md transition duration-300 hover:bg-black/50">
                       {activeItem.title}
                     </span>
                   </div>
 
-                  {/* controls */}
                   <div className="flex flex-wrap items-center gap-4">
                     <button
                       type="button"
                       onClick={goPrev}
-                      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/12 bg-black/35 text-white backdrop-blur-sm transition hover:bg-white/10"
+                      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 active:scale-95"
                       aria-label="Précédent"
                     >
                       <ArrowLeftIcon />
                     </button>
 
-                    <div className="min-w-[84px] text-center text-[30px] font-medium tracking-[-0.04em] text-white">
+                    <div className="min-w-[96px] text-center text-[28px] font-medium tracking-[-0.05em] text-white sm:text-[30px]">
                       {String(activeIndex + 1).padStart(2, "0")}
                       <span className="text-white/55">
                         {" "}
@@ -160,10 +214,11 @@ export default function PortfolioSection() {
 
                     <a
                       href="#contact"
-                      className="group inline-flex items-center gap-3 rounded-full bg-white px-5 py-3.5 text-sm font-semibold text-black transition hover:bg-white/92"
+                      className="group inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-[15px] font-semibold text-black shadow-[0_12px_28px_rgba(0,0,0,0.16)] transition duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:bg-white/95 active:scale-95"
                     >
                       <span>Voir portfolio</span>
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-white transition group-hover:translate-x-1">
+
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-white transition duration-300 group-hover:translate-x-1 group-hover:scale-105">
                         <ArrowRightIcon />
                       </span>
                     </a>
@@ -171,7 +226,7 @@ export default function PortfolioSection() {
                     <button
                       type="button"
                       onClick={goNext}
-                      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/12 bg-black/35 text-white backdrop-blur-sm transition hover:bg-white/10"
+                      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 active:scale-95"
                       aria-label="Suivant"
                     >
                       <ArrowRightIcon />
@@ -179,11 +234,115 @@ export default function PortfolioSection() {
                   </div>
                 </div>
               </div>
+
+              {/* mobile bottom ui */}
+              <div className="absolute bottom-5 left-4 right-4 z-20 sm:hidden">
+                <div className="rounded-[28px] border border-white/10 bg-black/48 p-4 backdrop-blur-xl shadow-[0_14px_40px_rgba(0,0,0,0.32)]">
+                  <div className="mb-4 flex flex-wrap gap-2.5">
+                    <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] font-medium text-white">
+                      {activeItem.category}
+                    </span>
+
+                    <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] font-medium text-white/95">
+                      {activeItem.title}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={goPrev}
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white transition duration-300 hover:bg-white/10 active:scale-95"
+                        aria-label="Précédent"
+                      >
+                        <ArrowLeftIcon />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={goNext}
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white transition duration-300 hover:bg-white/10 active:scale-95"
+                        aria-label="Suivant"
+                      >
+                        <ArrowRightIcon />
+                      </button>
+                    </div>
+
+                    <div className="text-[20px] font-semibold tracking-[-0.05em] text-white">
+                      {String(activeIndex + 1).padStart(2, "0")}
+                      <span className="text-white/50">
+                        {" "}
+                        / {String(total).padStart(2, "0")}
+                      </span>
+                    </div>
+                  </div>
+
+                  <a
+                    href="#contact"
+                    className="group mt-4 inline-flex w-full items-center justify-between rounded-full bg-white px-5 py-3.5 text-[15px] font-semibold text-black shadow-[0_12px_28px_rgba(0,0,0,0.16)] transition duration-300 hover:bg-white/95 active:scale-[0.99]"
+                  >
+                    <span>Voir portfolio</span>
+
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-white transition duration-300 group-hover:translate-x-1">
+                      <ArrowRightIcon />
+                    </span>
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* RIGHT DARK PANEL */}
-            <div className="hidden bg-[#02040a] lg:block">
-              <div className="h-full w-full bg-gradient-to-b from-[#02040a] via-[#02040a] to-[#010308]" />
+            <div className="hidden lg:flex lg:flex-col lg:justify-between bg-[#02040a]">
+              <div className="border-l border-white/6 px-8 py-10 xl:px-10 xl:py-12">
+                <div className="max-w-[260px]">
+                  <p className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/35">
+                    Sélection
+                  </p>
+
+                  <h3 className="mt-4 text-[28px] font-semibold tracking-[-0.04em] text-white">
+                    {activeItem.title}
+                  </h3>
+
+                  <p className="mt-3 text-[15px] leading-[1.8] text-white/52">
+                    Une direction visuelle raffinée, pensée pour mettre en avant
+                    l’élégance, la précision et l’identité du salon.
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-l border-t border-white/6 px-8 py-8 xl:px-10">
+                <div className="mb-5 h-[2px] w-full overflow-hidden rounded-full bg-white/6">
+                  <div
+                    className="h-full rounded-full bg-white/70 transition-all duration-500"
+                    style={{
+                      width: `${((activeIndex + 1) / total) * 100}%`,
+                    }}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="text-[13px] uppercase tracking-[0.22em] text-white/38">
+                    Slide
+                  </div>
+
+                  <div className="text-[16px] font-medium tracking-[-0.04em] text-white/74">
+                    {String(activeIndex + 1).padStart(2, "0")} — {String(total).padStart(2, "0")}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* mobile progress */}
+          <div className="mt-4 sm:hidden">
+            <div className="h-[3px] w-full overflow-hidden rounded-full bg-black/10">
+              <div
+                className="h-full rounded-full bg-black transition-all duration-500"
+                style={{
+                  width: `${((activeIndex + 1) / total) * 100}%`,
+                }}
+              />
             </div>
           </div>
         </div>

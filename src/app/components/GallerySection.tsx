@@ -4,25 +4,23 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const IMAGES = [
-  "/gallery/1.jpg",
-  "/gallery/2.jpg",
-  "/gallery/3.jpg",
-  "/gallery/4.jpg",
-  "/gallery/5.jpg",
-  "/gallery/6.jpg",
-  "/gallery/7.jpg",
-  "/gallery/8.jpeg",
-  "/gallery/9.jpeg",
-  "/gallery/9.jpg",
-  "/gallery/10.jpeg",
-  "/gallery/11.jpeg",
-  "/gallery/12.jpeg",
-  "/gallery/13.jpg",
-  "/gallery/14.jpeg",
-  "/gallery/15.jpeg",
-  "/gallery/16.jpeg",
-  "/gallery/17.jpeg",
-  "/gallery/18.jpeg",
+  "/gallery/Barbe Blanche-89.JPG",    
+  "/gallery/Barbe Blanche-86.JPG",  
+  "/gallery/Barbe Blanche-1.JPG",
+  "/gallery/Barbe Blanche-4.JPG",
+  "/gallery/Barbe Blanche-5.JPG",
+  "/gallery/Barbe Blanche-19.JPG",
+  "/gallery/Barbe Blanche-21.JPG",
+  "/gallery/Barbe Blanche-22.JPG",
+  "/gallery/Barbe Blanche-33.JPG",
+  "/gallery/Barbe Blanche-46.JPG",
+  "/gallery/Barbe Blanche-49.JPG",
+  "/gallery/Barbe Blanche-50.JPG",
+  "/gallery/Barbe Blanche-95.JPG",
+  "/gallery/Barbe Blanche-96.JPG",
+  "/gallery/Barbe Blanche-97.JPG",
+  "/gallery/Barbe Blanche-99.JPG",
+
 ];
 
 export default function GallerySection() {

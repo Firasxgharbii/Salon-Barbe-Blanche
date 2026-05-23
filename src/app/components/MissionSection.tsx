@@ -102,7 +102,7 @@ function GoogleBadge({ isVisible }: { isVisible: boolean }) {
         <div className="text-[16px] font-semibold text-[#2e2e2e] sm:text-[18px]">
           5/5{" "}
           <span className="font-normal text-[#2e2e2e]/70">
-            Basé sur 403 avis
+            Basé sur 210 avis 
           </span>
         </div>
       </div>
@@ -115,11 +115,11 @@ export default function MissionSection() {
   const rating = useInView<HTMLDivElement>(0.22);
   const image = useInView<HTMLDivElement>(0.22);
 
-  const line1 = "Notre mission, c’est de créer un";
-  const line2 = "espace où la coiffure va au-delà de";
-  const line3 = "la coupe. Un endroit où le style,";
-  const line4 = "la personnalité et les vraies connexions";
-  const line5 = "se rencontrent.";
+  const line1 = "Chez Barbe Blanche, chaque";
+const line2 = "coupe est pensée comme une";
+const line3 = "expérience sur mesure. Un lieu où";
+const line4 = "la précision, le style et la confiance";
+const line5 = "se rencontrent.";
 
   return (
     <section
@@ -212,7 +212,7 @@ export default function MissionSection() {
           >
             <div className="overflow-hidden rounded-[24px] border border-white/50 bg-white/25 p-2 shadow-[0_24px_60px_rgba(0,0,0,0.06)] backdrop-blur-sm sm:rounded-[30px] sm:p-3">
               <img
-                src="/gallery/17.jpeg"
+                src="/gallery/logo.JPG"
                 alt="Salon Barbe Blanche"
                 className="h-[240px] w-full rounded-[18px] object-cover transition duration-700 hover:scale-[1.02] sm:h-[360px] sm:rounded-[24px] lg:h-[520px]"
               />

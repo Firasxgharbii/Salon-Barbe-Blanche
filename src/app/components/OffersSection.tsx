@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 type OfferItem = {
   id: number;
@@ -11,6 +11,7 @@ type OfferItem = {
   items: string[];
   price: string;
   image: string;
+  image2?: string;
 };
 
 const offers: OfferItem[] = [
@@ -31,7 +32,7 @@ const offers: OfferItem[] = [
       "Coupe de cheveux pour enfant",
     ],
     price: "Prix varient entre 30 $ et 75 $",
-    image: "/gallery/Karim.jpeg",
+    image: "/gallery/1.JPG",
   },
   {
     id: 2,
@@ -48,7 +49,7 @@ const offers: OfferItem[] = [
       "Finition premium",
     ],
     price: "Prix varient entre 20 $ et 45 $",
-    image: "/gallery/3.jpg",
+    image: "/gallery/14.jpeg",
   },
   {
     id: 3,
@@ -65,7 +66,8 @@ const offers: OfferItem[] = [
       "Expérience signature",
     ],
     price: "Prix varient selon le service",
-    image: "/gallery/16.jpeg",
+    image: "/gallery/Barbe Blanche-49.JPG",
+    image2: "/gallery/Barbe Blanche-33.JPG",
   },
 ];
 
@@ -127,22 +129,34 @@ function PriceIcon() {
 
 export default function OffersSection() {
   const [activeId, setActiveId] = useState(offers[0].id);
+  const [showSecondImage, setShowSecondImage] = useState(false);
 
   const activeOffer = useMemo(
     () => offers.find((offer) => offer.id === activeId) ?? offers[0],
     [activeId]
   );
 
+  useEffect(() => {
+    if (activeOffer.id !== 3 || !activeOffer.image2) {
+      setShowSecondImage(false);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setShowSecondImage((prev) => !prev);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [activeOffer.id, activeOffer.image2]);
+
   return (
     <section
       id="services"
       className="relative overflow-hidden bg-[#ece9e6] px-4 py-16 sm:px-6 lg:px-10 lg:py-24"
     >
-      {/* subtle glow */}
       <div className="pointer-events-none absolute right-0 top-1/2 h-[420px] w-[220px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(255,196,87,0.45)_0%,_rgba(255,196,87,0.14)_35%,_transparent_72%)] blur-2xl" />
 
       <div className="mx-auto max-w-[1450px]">
-        {/* top header */}
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.6fr] lg:items-start">
           <div className="pt-3">
             <div className="inline-flex items-center gap-2 text-[14px] font-medium text-[#8f955c]">
@@ -161,9 +175,7 @@ export default function OffersSection() {
           </div>
         </div>
 
-        {/* main content */}
         <div className="mt-10 grid gap-10 lg:grid-cols-[0.88fr_1.62fr] lg:gap-16">
-          {/* LEFT MENU */}
           <div className="pt-2">
             <div className="space-y-0">
               {offers.map((offer, index) => {
@@ -192,7 +204,7 @@ export default function OffersSection() {
                       </span>
                     </div>
 
-                    {index !== offers.length && (
+                    {index !== offers.length - 1 && (
                       <div className="h-px w-full bg-black/18" />
                     )}
                   </button>
@@ -213,10 +225,8 @@ export default function OffersSection() {
             </div>
           </div>
 
-          {/* RIGHT CARD */}
           <div className="rounded-[26px] bg-[#f5f3f1] p-4 shadow-[0_10px_40px_rgba(0,0,0,0.03)] sm:p-5 lg:p-6">
             <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-              {/* TEXT */}
               <div className="rounded-[22px] bg-[#f5f3f1] px-4 py-5 sm:px-6 sm:py-6 lg:px-6 lg:py-6">
                 <h3 className="text-[36px] leading-none tracking-[-0.04em] text-[#f08a4b] sm:text-[44px]">
                   {activeOffer.title}
@@ -241,13 +251,33 @@ export default function OffersSection() {
                 </div>
               </div>
 
-              {/* IMAGE */}
               <div className="overflow-hidden rounded-[20px]">
-                <img
-                  src={activeOffer.image}
-                  alt={activeOffer.title}
-                  className="h-full min-h-[420px] w-full object-cover"
-                />
+                <div className="relative h-full min-h-[420px] w-full">
+                  {activeOffer.id === 3 && activeOffer.image2 ? (
+                    <>
+                      <img
+                        src={activeOffer.image}
+                        alt={activeOffer.title}
+                        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+                          showSecondImage ? "opacity-0" : "opacity-100"
+                        }`}
+                      />
+                      <img
+                        src={activeOffer.image2}
+                        alt={`${activeOffer.title} secondaire`}
+                        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+                          showSecondImage ? "opacity-100" : "opacity-0"
+                        }`}
+                      />
+                    </>
+                  ) : (
+                    <img
+                      src={activeOffer.image}
+                      alt={activeOffer.title}
+                      className="h-full min-h-[420px] w-full object-cover"
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </div>
