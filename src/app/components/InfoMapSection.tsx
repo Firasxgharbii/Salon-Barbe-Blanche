@@ -1,120 +1,135 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 type Props = {
   mapQuery?: string;
 };
 
+const infoMapContent = {
+  fr: {
+    hoursTitle: "Horaires",
+    locationTitle: "Adresse",
+    reachTitle: "Nous contacter",
+    monday: "Lundi : 12h à 18h",
+    tuesdayFriday: "Mardi au vendredi : 10h à 19h",
+    saturday: "Samedi : 10h à 17h",
+    sunday: "Dimanche : fermé",
+    addressLine1: "3733 Rue Notre-Dame O",
+    addressLine2: "Montréal, QC H4C 1P8",
+    metro: "Métro : Lionel-Groulx",
+    openMap: "Ouvrir dans Google Maps",
+    premiumNote: "Service premium — sur rendez-vous",
+    mapTitle: "Carte Google du Salon Barbe Blanche",
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    email: "Email",
+  },
+
+  en: {
+    hoursTitle: "Hours",
+    locationTitle: "Location",
+    reachTitle: "Reach out",
+    monday: "Monday: 12 PM to 6 PM",
+    tuesdayFriday: "Tuesday to Friday: 10 AM to 7 PM",
+    saturday: "Saturday: 10 AM to 5 PM",
+    sunday: "Sunday: closed",
+    addressLine1: "3733 Notre-Dame St W",
+    addressLine2: "Montreal, QC H4C 1P8",
+    metro: "Metro: Lionel-Groulx",
+    openMap: "Open in Google Maps",
+    premiumNote: "Premium service — by appointment",
+    mapTitle: "Salon Barbe Blanche Google Map",
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    email: "Email",
+  },
+} as const;
+
 export default function InfoMapSection({
   mapQuery = "3733 R. Notre-Dame O, Montréal, QC H4C 1P8, Canada",
 }: Props) {
+  const { language } = useLanguage();
+  const content = infoMapContent[language];
+
   const [mounted, setMounted] = useState(false);
   const wrapRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <section id="contact" className="bg-[var(--page)]">
       <div
         ref={wrapRef}
-        className="
-          mx-auto 
-          w-full 
-          max-w-[1400px] 
-          px-6 md:px-10 lg:px-14 
-          py-20 md:py-28
-        "
+        className="mx-auto w-full max-w-[1400px] px-6 py-20 md:px-10 md:py-28 lg:px-14"
       >
-        {/* CONTAINER PRINCIPAL */}
-        <div
-          className="
-            grid grid-cols-1 lg:grid-cols-2
-            overflow-hidden
-            rounded-3xl
-            border border-[var(--ink)]/20
-            bg-[color:rgba(255,255,255,0.25)]
-            backdrop-blur-[2px]
-          "
-        >
-          {/* LEFT PANEL */}
+        {/* Main container */}
+        <div className="grid grid-cols-1 overflow-hidden rounded-3xl border border-[var(--ink)]/20 bg-[color:rgba(255,255,255,0.25)] backdrop-blur-[2px] lg:grid-cols-2">
+          {/* Left panel */}
           <div
             className={[
-              "px-10 md:px-14 lg:px-20",
-              "py-14 md:py-16 lg:py-20",
-              "text-[var(--ink)]",
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
+              "px-10 py-14 text-[var(--ink)] md:px-14 md:py-16 lg:px-20 lg:py-20",
+              mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
               "transition-all duration-700 ease-out",
             ].join(" ")}
           >
-            {/* GRID HOURS / LOCATION */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-              {/* HOURS */}
+            {/* Hours / location */}
+            <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
+              {/* Hours */}
               <div>
-                <h3 className="font-serif text-3xl md:text-4xl mb-8">
-                  Hours
+                <h3 className="mb-8 font-serif text-3xl md:text-4xl">
+                  {content.hoursTitle}
                 </h3>
-                <ul className="space-y-2 text-sm md:text-[15px] leading-relaxed opacity-90">
-                  <li>Monday: 12pm–6pm</li>
-                  <li>Tuesday–Friday: 10am–7pm</li>
-                  <li>Saturday: 10am–5pm</li>
-                  <li>Sunday: closed</li>
+
+                <ul className="space-y-2 text-sm leading-relaxed opacity-90 md:text-[15px]">
+                  <li>{content.monday}</li>
+                  <li>{content.tuesdayFriday}</li>
+                  <li>{content.saturday}</li>
+                  <li>{content.sunday}</li>
                 </ul>
               </div>
 
-              {/* LOCATION */}
+              {/* Location */}
               <div>
-                <h3 className="font-serif text-3xl md:text-4xl mb-8">
-                  Location
+                <h3 className="mb-8 font-serif text-3xl md:text-4xl">
+                  {content.locationTitle}
                 </h3>
 
-                <div className="space-y-4 text-sm md:text-[15px] leading-relaxed opacity-90">
+                <div className="space-y-4 text-sm leading-relaxed opacity-90 md:text-[15px]">
                   <div>
-                    <div className="font-medium">
-                      3733 R. Notre-Dame O
-                    </div>
-                    <div>Montréal, QC H4C 1P8</div>
+                    <div className="font-medium">{content.addressLine1}</div>
+                    <div>{content.addressLine2}</div>
                   </div>
 
-                  {/* Si tu veux garder une info métro, change ici */}
-                  <div>Metro: Lionel-Groulx</div>
+                  <div>{content.metro}</div>
                 </div>
 
-                {/* BOUTON MAP */}
                 <a
                   href={`https://www.google.com/maps?q=${encodeURIComponent(
                     mapQuery
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="
-                    mt-8 inline-block
-                    rounded-full
-                    border border-[var(--ink)]/30
-                    px-6 py-2
-                    text-[11px]
-                    font-semibold
-                    tracking-[0.2em]
-                    uppercase
-                    hover:bg-[var(--ink)] hover:text-[var(--page)]
-                    transition
-                  "
+                  className="mt-8 inline-block rounded-full border border-[var(--ink)]/30 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] transition hover:bg-[var(--ink)] hover:text-[var(--page)]"
                 >
-                  Open in Google Maps
+                  {content.openMap}
                 </a>
               </div>
             </div>
 
-            {/* SEPARATOR */}
+            {/* Separator */}
             <div className="my-16 h-px bg-[var(--ink)]/20" />
 
-            {/* REACH OUT */}
+            {/* Reach out */}
             <div>
-              <h3 className="font-serif text-3xl md:text-4xl mb-8">
-                Reach out
+              <h3 className="mb-8 font-serif text-3xl md:text-4xl">
+                {content.reachTitle}
               </h3>
 
-              <ul className="space-y-3 text-sm md:text-[15px] opacity-90">
+              <ul className="space-y-3 text-sm opacity-90 md:text-[15px]">
                 <li>
                   <a
                     href="tel:+15148466636"
@@ -123,6 +138,7 @@ export default function InfoMapSection({
                     (514) 846-6636
                   </a>
                 </li>
+
                 <li>
                   <a
                     href="https://instagram.com/"
@@ -130,38 +146,42 @@ export default function InfoMapSection({
                     rel="noreferrer"
                     className="underline underline-offset-4"
                   >
-                    Instagram
+                    {content.instagram}
                   </a>
                 </li>
+
+                <li>
+                  <a
+                    href="https://www.tiktok.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline underline-offset-4"
+                  >
+                    {content.tiktok}
+                  </a>
+                </li>
+
                 <li>
                   <a
                     href="mailto:contact@barbeblanche.com"
                     className="underline underline-offset-4"
                   >
-                    Tiktok
-                  </a>
-                </li>
-                 <li>
-                  <a
-                    href="mailto:contact@barbeblanche.com"
-                    className="underline underline-offset-4"
-                  >
-                    Email
+                    {content.email}
                   </a>
                 </li>
               </ul>
 
-              <div className="mt-10 text-[11px] tracking-[0.18em] uppercase opacity-60">
-                Premium service — sur rendez-vous
+              <div className="mt-10 text-[11px] uppercase tracking-[0.18em] opacity-60">
+                {content.premiumNote}
               </div>
             </div>
           </div>
 
-          {/* RIGHT MAP */}
+          {/* Right map */}
           <div className="relative min-h-[420px] lg:min-h-[620px]">
             {mounted && (
               <iframe
-                title="Google Map"
+                title={content.mapTitle}
                 className="absolute inset-0 h-full w-full"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -172,9 +192,6 @@ export default function InfoMapSection({
             )}
           </div>
         </div>
-
-        {/* FOOT NOTE */}
-        
       </div>
     </section>
   );

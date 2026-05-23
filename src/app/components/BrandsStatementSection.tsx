@@ -2,6 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { useLanguage } from "../context/LanguageContext";
+
+const SQUARE_BOOKING_URL =
+  "https://book.squareup.com/appointments/78tpzxlw4jqmo4/location/LK9EBBZT64PRB/services";
 
 function ArrowRightIcon() {
   return (
@@ -10,6 +14,7 @@ function ArrowRightIcon() {
       fill="none"
       className="h-5 w-5"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path
         d="M5 12H19"
@@ -33,11 +38,14 @@ const brands = [
   { name: "andis", type: "text" },
   { name: "BaBylissPRO", type: "text" },
   { name: "Reuzel", type: "text" },
-  { name: "Proraso", type: "silver" },
+  { name: "Proraso", type: "muted" },
 ] as const;
 
 const containerVariants = {
-  hidden: { opacity: 0, y: 70 },
+  hidden: {
+    opacity: 0,
+    y: 70,
+  },
   visible: {
     opacity: 1,
     y: 0,
@@ -50,7 +58,10 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 26 },
+  hidden: {
+    opacity: 0,
+    y: 26,
+  },
   visible: {
     opacity: 1,
     y: 0,
@@ -62,6 +73,8 @@ const itemVariants = {
 };
 
 export default function BrandsStatementSection() {
+  const { t } = useLanguage();
+
   return (
     <section className="bg-[var(--page)] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
       <motion.div
@@ -72,7 +85,7 @@ export default function BrandsStatementSection() {
         viewport={{ once: true, amount: 0.25 }}
       >
         <div className="relative overflow-hidden rounded-[34px] bg-[#ededed] px-7 py-10 shadow-[0_20px_60px_rgba(0,0,0,0.04)] sm:px-10 sm:py-12 lg:px-14 lg:py-14 xl:px-16 xl:py-16">
-          {/* halo top right */}
+          {/* Halo premium */}
           <motion.div
             className="pointer-events-none absolute right-[-70px] top-[-70px] h-[220px] w-[220px] rounded-full bg-[radial-gradient(circle,rgba(210,180,120,0.55)_0%,rgba(210,180,120,0.18)_38%,transparent_72%)]"
             animate={{
@@ -86,7 +99,7 @@ export default function BrandsStatementSection() {
             }}
           />
 
-          {/* shimmer */}
+          {/* Shine effect */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <motion.div
               className="absolute inset-y-0 left-[-20%] w-[28%] bg-gradient-to-r from-transparent via-white/30 to-transparent blur-2xl"
@@ -100,27 +113,28 @@ export default function BrandsStatementSection() {
             />
           </div>
 
-          {/* top */}
-          <div className="grid gap-10 lg:grid-cols-[0.82fr_1.28fr] lg:gap-16">
+          {/* Main content */}
+          <div className="relative z-10 grid gap-10 lg:grid-cols-[0.82fr_1.28fr] lg:gap-16">
             <motion.div variants={itemVariants} className="flex items-start pt-1">
               <div className="inline-flex items-center gap-2 text-[14px] font-medium text-[#9b6b3d] sm:text-[15px]">
                 <span className="text-[16px]">✦</span>
-                <span>Barbier premium à Montréal</span>
+                <span>{t.brands.label}</span>
               </div>
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <h2 className="max-w-[980px] text-[40px] font-[780] leading-[0.93] tracking-[-0.075em] text-[#3f3f3f] sm:text-[54px] md:text-[66px] lg:text-[80px] xl:text-[88px]">
-                Salon Barbe Blanche a été pensé pour offrir une expérience de
-                coupe premium, précise et chaleureuse. Ici, chaque détail compte :
-                le style, la finition et le confort du client.
+              <h2 className="max-w-[980px] text-[42px] font-[780] leading-[0.92] tracking-[-0.075em] text-[#373737] sm:text-[56px] md:text-[68px] lg:text-[82px] xl:text-[92px]">
+                {t.brands.title}
               </h2>
 
+              <p className="mt-8 max-w-[760px] text-[17px] leading-[1.65] text-[#666] sm:text-[19px] md:text-[20px]">
+                {t.brands.description}
+              </p>
             </motion.div>
           </div>
 
-          {/* bottom */}
-          <div className="mt-14 flex flex-col gap-10 lg:mt-16 lg:flex-row lg:items-end lg:justify-between">
+          {/* Bottom content */}
+          <div className="relative z-10 mt-14 flex flex-col gap-10 lg:mt-16 lg:flex-row lg:items-end lg:justify-between">
             <motion.div
               variants={itemVariants}
               className="grid grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-3 md:grid-cols-5 md:gap-x-12 lg:flex lg:flex-wrap lg:items-center lg:gap-16 xl:gap-20"
@@ -142,28 +156,31 @@ export default function BrandsStatementSection() {
                     scale: 1.03,
                   }}
                 >
-                  {brand.type === "silver" ? (
-                    <span className="silver-logo text-[28px] font-semibold tracking-[-0.05em] sm:text-[30px]">
-                      {brand.name}
-                    </span>
-                  ) : (
-                    <span className="text-[26px] font-semibold tracking-[-0.05em] text-[#2f2f2f] sm:text-[30px]">
-                      {brand.name}
-                    </span>
-                  )}
+                  <span
+                    className={
+                      brand.type === "muted"
+                        ? "text-[26px] font-semibold tracking-[-0.05em] text-[#b7b7b7] sm:text-[30px]"
+                        : "text-[26px] font-semibold tracking-[-0.05em] text-[#2f2f2f] sm:text-[30px]"
+                    }
+                  >
+                    {brand.name}
+                  </span>
                 </motion.div>
               ))}
             </motion.div>
 
             <motion.a
               variants={itemVariants}
-              href="#booking"
+              href={SQUARE_BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group inline-flex self-start whitespace-nowrap text-[16px] font-medium text-[#505050] transition hover:text-black lg:self-end"
               whileHover={{ x: 4 }}
               transition={{ duration: 0.25 }}
+              aria-label={t.brands.book}
             >
               <span className="flex items-center gap-4">
-                <span>Réservez maintenant</span>
+                <span>{t.brands.book}</span>
 
                 <motion.span
                   className="flex h-12 w-12 items-center justify-center rounded-full bg-[#9b6b3d] text-white shadow-[0_14px_30px_rgba(155,107,61,0.28)]"

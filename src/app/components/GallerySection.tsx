@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 const IMAGES = [
-  "/gallery/Barbe Blanche-89.JPG",    
-  "/gallery/Barbe Blanche-86.JPG",  
+  "/gallery/Barbe Blanche-89.JPG",
+  "/gallery/Barbe Blanche-86.JPG",
   "/gallery/Barbe Blanche-1.JPG",
   "/gallery/Barbe Blanche-4.JPG",
   "/gallery/Barbe Blanche-5.JPG",
@@ -20,10 +21,26 @@ const IMAGES = [
   "/gallery/Barbe Blanche-96.JPG",
   "/gallery/Barbe Blanche-97.JPG",
   "/gallery/Barbe Blanche-99.JPG",
-
 ];
 
+const galleryContent = {
+  fr: {
+    label: "Galerie",
+    note: "Défilement automatique — pause au survol",
+    imageAlt: "Galerie Salon Barbe Blanche",
+  },
+  en: {
+    label: "Gallery",
+    note: "Automatic scrolling — pause on hover",
+    imageAlt: "Salon Barbe Blanche gallery",
+  },
+} as const;
+
 export default function GallerySection() {
+  const { language } = useLanguage();
+
+  const content = galleryContent[language];
+
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -33,88 +50,89 @@ export default function GallerySection() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  // ✅ Observer: animation tourne seulement quand la section est visible
+  const loopImages = useMemo(() => IMAGES, []);
+
   useEffect(() => {
     if (!wrapRef.current) return;
 
-    const obs = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       ([entry]) => {
         setInView(entry.isIntersecting);
 
-        // petit effet d’entrée (une fois)
-        if (entry.isIntersecting) setVisibleAnim(true);
+        if (entry.isIntersecting) {
+          setVisibleAnim(true);
+        }
       },
       { threshold: 0.25 }
     );
 
-    obs.observe(wrapRef.current);
-    return () => obs.disconnect();
+    observer.observe(wrapRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
-  // ✅ avance automatique 1 par 1 (quand visible + pas pause)
   useEffect(() => {
-    if (!inView) return;
-    if (paused) return;
+    if (!inView || paused) return;
 
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % IMAGES.length);
-    }, 700); // ✅ PLUS RAPIDE (mets 600 si tu veux encore plus)
+    const intervalId = window.setInterval(() => {
+      setIndex((currentIndex) => (currentIndex + 1) % IMAGES.length);
+    }, 700);
 
-    return () => window.clearInterval(id);
+    return () => window.clearInterval(intervalId);
   }, [inView, paused]);
 
-  // ✅ scroll HORIZONTAL uniquement (ne touche PAS au scroll vertical)
   useEffect(() => {
     const scroller = scrollerRef.current;
-    const el = itemRefs.current[index];
-    if (!scroller || !el) return;
+    const activeElement = itemRefs.current[index];
+
+    if (!scroller || !activeElement) return;
 
     scroller.scrollTo({
-      left: el.offsetLeft,
+      left: activeElement.offsetLeft,
       behavior: "smooth",
     });
   }, [index]);
-
-  const LOOP = useMemo(() => IMAGES, []);
 
   return (
     <section id="gallery" className="bg-page">
       <div
         ref={wrapRef}
-        className="w-full px-6 md:px-10 lg:px-14 py-14 md:py-20"
+        className="w-full px-6 py-14 md:px-10 md:py-20 lg:px-14"
       >
         <div
           className={[
             "relative overflow-hidden",
-            visibleAnim ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
+            visibleAnim
+              ? "translate-y-0 opacity-100"
+              : "translate-y-6 opacity-0",
             "transition-all duration-700 ease-out",
           ].join(" ")}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          {/* ✅ fade premium sur les côtés */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-24 bg-gradient-to-r from-[var(--page)] to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 md:w-24 bg-gradient-to-l from-[var(--page)] to-transparent z-10" />
+          {/* Side fades */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[var(--page)] to-transparent md:w-24" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[var(--page)] to-transparent md:w-24" />
 
-          {/* ✅ scroller horizontal */}
+          {/* Horizontal scroller */}
           <div
             ref={scrollerRef}
             className={[
-              "flex gap-6 md:gap-8 overflow-x-auto scroll-smooth",
+              "flex gap-6 overflow-x-auto scroll-smooth md:gap-8",
               "snap-x snap-mandatory",
               "no-scrollbar",
               "pb-2",
             ].join(" ")}
             style={{ WebkitOverflowScrolling: "touch" }}
           >
-            {LOOP.map((src, i) => (
+            {loopImages.map((src, imageIndex) => (
               <div
-                key={`${src}-${i}`}
-                ref={(el) => {
-                  itemRefs.current[i] = el;
+                key={`${src}-${imageIndex}`}
+                ref={(element) => {
+                  itemRefs.current[imageIndex] = element;
                 }}
                 className={[
-                  "relative overflow-hidden rounded-3xl shrink-0 snap-start",
+                  "relative shrink-0 snap-start overflow-hidden rounded-3xl",
                   "w-[78vw] sm:w-[55vw] md:w-[360px] lg:w-[380px]",
                   "h-[420px] sm:h-[520px] md:h-[540px] lg:h-[560px]",
                   "bg-black/5",
@@ -122,19 +140,20 @@ export default function GallerySection() {
               >
                 <Image
                   src={src}
-                  alt={`Gallery ${i + 1}`}
+                  alt={`${content.imageAlt} ${imageIndex + 1}`}
                   fill
                   sizes="(min-width:1024px) 380px, (min-width:768px) 360px, 78vw"
                   className="object-cover transition-transform duration-500 hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition" />
+
+                <div className="absolute inset-0 bg-black/0 transition hover:bg-black/10" />
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-4 text-xs opacity-60 tracking-[0.18em] uppercase">
-          Galerie — automatique (pause au survol)
+        <div className="mt-4 text-xs uppercase tracking-[0.18em] opacity-60">
+          {content.label} — {content.note}
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 const miniGallery = [
   "/gallery/Barbe Blanche-1.JPG",
@@ -12,6 +13,8 @@ const miniGallery = [
 ];
 
 export default function ArtExecutionSection() {
+  const { t } = useLanguage();
+
   return (
     <section className="relative overflow-hidden bg-[#ece9e6] px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
       {/* Background glow */}
@@ -23,11 +26,11 @@ export default function ArtExecutionSection() {
         {/* Top labels */}
         <div className="mb-10 flex items-start justify-between gap-6">
           <div className="text-[14px] font-medium text-[#6f6f68]">
-            ✦ Notre savoir-faire
+            {t.art.labelLeft}
           </div>
 
           <div className="text-right text-[14px] font-medium text-[#6f6f68]">
-            ✦ Notre portfolio
+            {t.art.labelRight}
           </div>
         </div>
 
@@ -36,11 +39,11 @@ export default function ArtExecutionSection() {
           {/* Left title */}
           <div>
             <div className="font-serif text-[82px] font-[700] leading-[0.86] tracking-[-0.06em] text-[#2f3335] sm:text-[120px] md:text-[150px] lg:text-[180px] xl:text-[210px]">
-              L’Art
+              {t.art.titleLeft}
             </div>
 
             <div className="mt-8 font-serif text-[42px] font-[600] tracking-[-0.04em] text-[#3d4143] sm:text-[58px] md:text-[72px]">
-              (@2026)
+              {t.art.year}
             </div>
           </div>
 
@@ -53,29 +56,24 @@ export default function ArtExecutionSection() {
 
               <div className="relative pl-8 sm:pl-16 md:pl-20">
                 <div className="font-serif text-[76px] font-[700] leading-[0.9] tracking-[-0.055em] text-[#2f3335] sm:text-[110px] md:text-[150px] lg:text-[180px] xl:text-[210px]">
-                  Exécution
+                  {t.art.titleRight}
                 </div>
               </div>
             </div>
 
             <p className="mt-8 max-w-[860px] text-[20px] leading-[1.45] tracking-[-0.02em] text-[#3f4345]/75 sm:text-[24px]">
-              Chez Barbe Blanche, chaque coupe est travaillée avec précision,
-              patience et attention. De la première ligne jusqu’à la finition,
-              nous créons un style propre, adapté à votre visage et à votre
-              personnalité. Ici, l’élégance se voit dans les détails, et chaque
-              rendez-vous devient une expérience soignée, confortable et
-              professionnelle.
+              {t.art.description}
             </p>
 
             <div className="mt-8 text-[15px] font-medium text-[#6f6f68]">
-              ✦ Notre art
+              {t.art.labelBottom}
             </div>
 
             {/* Mini gallery */}
             <div className="mt-5 flex flex-wrap gap-3 sm:gap-4">
               {miniGallery.map((image, index) => (
                 <div
-                  key={index}
+                  key={image}
                   className="group overflow-hidden rounded-[18px] bg-white/45 shadow-[0_8px_24px_rgba(0,0,0,0.05)]"
                 >
                   <img

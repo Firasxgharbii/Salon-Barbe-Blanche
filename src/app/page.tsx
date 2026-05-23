@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import MissionSection from "./components/MissionSection";
-
 import OffersSection from "./components/OffersSection";
 import GallerySection from "./components/GallerySection";
-
 import ScrollToTop from "./components/ScrollToTop";
 import PortfolioSection from "./components/PortfolioSection";
 import ArtExecutionSection from "./components/ArtExecutionSection";
 import BrandsStatementSection from "./components/BrandsStatementSection";
 import SectionReveal from "./components/SectionReveal";
+
+import { useLanguage, type Translation } from "./context/LanguageContext";
 
 /** Square Booking */
 const SQUARE_BOOKING_URL =
@@ -23,66 +23,13 @@ function openSquareBooking() {
   window.open(SQUARE_BOOKING_URL, "_blank", "noopener,noreferrer");
 }
 
-/* ===================== I18N ===================== */
-
-type Lang = "fr" | "en";
-const LANG_STORAGE_KEY = "bb_lang";
-
-const I18N = {
-  fr: {
-    navServices: "Services",
-    navContact: "Contact",
-    navGallery: "Galerie",
-    bookNow: "Réserver",
-    reserve: "Réserver",
-    seeServices: "Voir les services",
-    welcome: "Bienvenue chez Barbe Blanche",
-    heroTitleA: "Le Grooming Moderne",
-    heroTitleB: "Barbe Blanche",
-    heroSub: "Un salon premium au cœur de Montréal",
-    menuTitle: "Menu",
-  },
-  en: {
-    navServices: "Services",
-    navContact: "Contact",
-    navGallery: "Gallery",
-    bookNow: "Book Now",
-    reserve: "Book Now",
-    seeServices: "View services",
-    welcome: "Welcome to Barbe Blanche",
-    heroTitleA: "Modern Grooming",
-    heroTitleB: "Barbe Blanche",
-    heroSub: "A premium barbershop in the heart of Montreal",
-    menuTitle: "Menu",
-  },
-} as const;
-
-function isLang(v: unknown): v is Lang {
-  return v === "fr" || v === "en";
-}
-
-/* ===================== PAGE ===================== */
-
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [lang, setLang] = useState<Lang>("fr");
-
-  const t = I18N[lang];
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const saved = window.localStorage.getItem(LANG_STORAGE_KEY);
-    if (isLang(saved)) setLang(saved);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.localStorage.setItem(LANG_STORAGE_KEY, lang);
-    document.documentElement.lang = lang;
-  }, [lang]);
+  const { language, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
+
     return () => {
       document.body.style.overflow = "";
     };
@@ -91,6 +38,7 @@ export default function Home() {
   const goTo = (id: string) => {
     const el = document.getElementById(id);
     setMenuOpen(false);
+
     if (!el) return;
 
     setTimeout(() => {
@@ -98,15 +46,13 @@ export default function Home() {
     }, 60);
   };
 
-  const toggleLang = () => setLang((prev) => (prev === "fr" ? "en" : "fr"));
-
   return (
     <main className="min-h-screen bg-[var(--page)] text-[var(--ink)]">
       <Header
         onOpenMenu={() => setMenuOpen(true)}
         onBookNow={openSquareBooking}
-        lang={lang}
-        onToggleLang={toggleLang}
+        language={language}
+        onToggleLang={toggleLanguage}
         t={t}
       />
 
@@ -115,8 +61,8 @@ export default function Home() {
         onClose={() => setMenuOpen(false)}
         onGoTo={goTo}
         onBookNow={openSquareBooking}
-        lang={lang}
-        onToggleLang={toggleLang}
+        language={language}
+        onToggleLang={toggleLanguage}
         t={t}
       />
 
@@ -129,6 +75,7 @@ export default function Home() {
       <SectionReveal variant="fadeRight">
         <OffersSection />
       </SectionReveal>
+
       <SectionReveal variant="zoomIn">
         <PortfolioSection />
       </SectionReveal>
@@ -137,25 +84,19 @@ export default function Home() {
         <BrandsStatementSection />
       </SectionReveal>
 
-     
-
-     
-
       <SectionReveal variant="zoomOut">
         <ArtExecutionSection />
       </SectionReveal>
 
       <SectionReveal variant="splitRise">
-        
         <GallerySection />
       </SectionReveal>
 
-      
-
       <Footer
         onBookNow={openSquareBooking}
-        lang={lang}
-        onToggleLang={toggleLang}
+        language={language}
+        onToggleLang={toggleLanguage}
+        t={t}
       />
 
       <MobileBookNow onBookNow={openSquareBooking} t={t} />
@@ -169,15 +110,15 @@ export default function Home() {
 function Header({
   onOpenMenu,
   onBookNow,
-  lang,
+  language,
   onToggleLang,
   t,
 }: {
   onOpenMenu: () => void;
   onBookNow: () => void;
-  lang: Lang;
+  language: "fr" | "en";
   onToggleLang: () => void;
-  t: (typeof I18N)[Lang];
+  t: Translation;
 }) {
   return (
     <header
@@ -192,7 +133,7 @@ function Header({
         <div className="flex-1">
           <a
             className="text-2xl font-serif font-semibold leading-none text-ink"
-            href="#"
+            href="#home"
           >
             BARBE BLANCHE
           </a>
@@ -200,13 +141,15 @@ function Header({
 
         <nav className="hidden gap-12 text-xs font-semibold uppercase tracking-[0.22em] text-ink md:flex">
           <a className="hover:opacity-70" href="#services">
-            {t.navServices}
+            {t.nav.services}
           </a>
+
           <a className="hover:opacity-70" href="#contact">
-            {t.navContact}
+            {t.nav.contact}
           </a>
+
           <a className="hover:opacity-70" href="#gallery">
-            {t.navGallery}
+            {t.nav.gallery}
           </a>
         </nav>
 
@@ -222,7 +165,7 @@ function Header({
               hover:bg-ink hover:text-page md:inline-flex
             "
           >
-            {t.bookNow}
+            {t.nav.book}
           </button>
 
           <button
@@ -237,10 +180,11 @@ function Header({
             "
             aria-label="Toggle language"
           >
-            {lang === "fr" ? "EN" : "FR"}
+            {language === "fr" ? "EN" : "FR"}
           </button>
 
           <button
+            type="button"
             onClick={onOpenMenu}
             className="
               inline-flex h-10 w-10 items-center justify-center rounded-full
@@ -265,7 +209,7 @@ function MobileMenu({
   onClose,
   onGoTo,
   onBookNow,
-  lang,
+  language,
   onToggleLang,
   t,
 }: {
@@ -273,16 +217,20 @@ function MobileMenu({
   onClose: () => void;
   onGoTo: (id: string) => void;
   onBookNow: () => void;
-  lang: Lang;
+  language: "fr" | "en";
   onToggleLang: () => void;
-  t: (typeof I18N)[Lang];
+  t: Translation;
 }) {
   if (!open) return null;
 
   const Item = ({ label, to }: { label: string; to?: string }) => (
     <button
+      type="button"
       onClick={() => {
-        if (!to) return onClose();
+        if (!to) {
+          onClose();
+          return;
+        }
 
         if (to === "book") {
           onClose();
@@ -305,6 +253,7 @@ function MobileMenu({
   return (
     <div className="fixed inset-0 z-[9999] md:hidden">
       <button
+        type="button"
         aria-label="Close menu overlay"
         onClick={onClose}
         className="absolute inset-0 bg-[rgba(230,232,236,0.90)] backdrop-blur-[6px]"
@@ -320,7 +269,7 @@ function MobileMenu({
       >
         <div className="flex h-14 items-center justify-between border-b border-ink/10 px-4">
           <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ink/70">
-            {t.menuTitle}
+            {t.nav.menu}
           </div>
 
           <div className="flex items-center gap-2">
@@ -334,10 +283,11 @@ function MobileMenu({
               onClick={onToggleLang}
               aria-label="Toggle language"
             >
-              {lang === "fr" ? "EN" : "FR"}
+              {language === "fr" ? "EN" : "FR"}
             </button>
 
             <button
+              type="button"
               onClick={onClose}
               className="
                 h-9 w-9 rounded-full border border-ink/20
@@ -352,17 +302,21 @@ function MobileMenu({
 
         <div className="px-3 py-2">
           <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white/40">
-            <Item label={t.navServices} to="services" />
+            <Item label={t.nav.services} to="services" />
             <div className="h-px bg-ink/10" />
-            <Item label={t.navContact} to="contact" />
+
+            <Item label={t.nav.contact} to="contact" />
             <div className="h-px bg-ink/10" />
-            <Item label={t.navGallery} to="gallery" />
+
+            <Item label={t.nav.gallery} to="gallery" />
             <div className="h-px bg-ink/10" />
-            <Item label={t.bookNow} to="book" />
+
+            <Item label={t.nav.book} to="book" />
           </div>
 
           <div className="pb-3 pt-4">
             <button
+              type="button"
               onClick={() => {
                 onClose();
                 onBookNow();
@@ -373,7 +327,7 @@ function MobileMenu({
                 transition hover:opacity-90
               "
             >
-              {t.bookNow}
+              {t.nav.book}
             </button>
           </div>
         </div>
@@ -391,7 +345,7 @@ function Hero({
 }: {
   onGoTo: (id: string) => void;
   onBookNow: () => void;
-  t: (typeof I18N)[Lang];
+  t: Translation;
 }) {
   return (
     <section
@@ -449,34 +403,36 @@ function Hero({
         <div className="mx-auto flex w-full max-w-[1200px] justify-center text-center">
           <div className="max-w-[980px]">
             <p className="mb-5 text-[12px] font-medium uppercase tracking-[0.34em] text-white/72 sm:text-[13px] md:mb-6">
-              {t.welcome}
+              {t.hero.eyebrow}
             </p>
 
             <h1 className="mx-auto max-w-[900px] text-[58px] font-[800] leading-[0.9] tracking-[-0.075em] text-white sm:text-[78px] md:text-[100px] lg:text-[126px] xl:text-[142px]">
-              {t.heroTitleA}
+              {t.hero.titleTop}
             </h1>
 
             <h2 className="mx-auto mt-2 max-w-[900px] font-serif text-[40px] italic leading-[0.96] text-white/95 sm:text-[56px] md:mt-3 md:text-[72px] lg:text-[88px] xl:text-[98px]">
-              {t.heroTitleB}
+              {t.hero.signature}
             </h2>
 
             <p className="mx-auto mt-6 max-w-[760px] text-[17px] leading-[1.65] text-white/78 sm:text-[18px] md:mt-7 md:text-[20px]">
-              {t.heroSub}
+              {t.hero.subtitle}
             </p>
 
             <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:mt-10 sm:flex-row">
               <button
+                type="button"
                 onClick={onBookNow}
                 className="inline-flex h-12 min-w-[160px] items-center justify-center rounded-full bg-white px-8 text-[15px] font-semibold text-black shadow-[0_12px_30px_rgba(255,255,255,0.12)] transition duration-300 hover:-translate-y-[1px] hover:scale-[1.02] hover:bg-white/95"
               >
-                {t.reserve}
+                {t.hero.book}
               </button>
 
               <button
+                type="button"
                 onClick={() => onGoTo("services")}
                 className="inline-flex h-12 min-w-[190px] items-center justify-center rounded-full border border-white/30 bg-white/[0.03] px-8 text-[15px] font-semibold text-white backdrop-blur-sm transition duration-300 hover:-translate-y-[1px] hover:border-white/50 hover:bg-white/10"
               >
-                {t.seeServices}
+                {t.hero.services}
               </button>
             </div>
           </div>
@@ -496,29 +452,33 @@ function MobileBookNow({
   t,
 }: {
   onBookNow: () => void;
-  t: (typeof I18N)[Lang];
+  t: Translation;
 }) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[70] border-t border-ink/15 bg-page/95 px-4 py-3 backdrop-blur md:hidden">
       <button
+        type="button"
         onClick={onBookNow}
         className="inline-flex h-12 w-full items-center justify-center rounded-full border border-ink text-xs font-semibold uppercase tracking-[0.22em] transition hover:bg-ink hover:text-page"
       >
-        {t.bookNow}
+        {t.nav.book}
       </button>
     </div>
   );
 }
 
 /* ===================== FOOTER ===================== */
+
 function Footer({
   onBookNow,
-  lang,
+  language,
   onToggleLang,
+  t,
 }: {
   onBookNow: () => void;
-  lang: Lang;
+  language: "fr" | "en";
   onToggleLang: () => void;
+  t: Translation;
 }) {
   return (
     <footer
@@ -538,18 +498,17 @@ function Footer({
           {/* LEFT */}
           <div className="lg:col-span-6">
             <div className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-white/35">
-              BARBERSHOP • MONTRÉAL
+              {t.footer.eyebrow}
             </div>
 
             <h2 className="max-w-[700px] text-[48px] font-[800] leading-[0.95] tracking-[-0.06em] text-[var(--accent)] sm:text-[64px] lg:text-[76px]">
-              Ayez du style.
+              {t.footer.titleLine1}
               <br />
-              Sentez-vous chez vous.
+              {t.footer.titleLine2}
             </h2>
 
             <p className="mt-7 max-w-[560px] text-[17px] font-[400] leading-[1.8] text-white/58">
-              Une expérience moderne, soignée et raffinée pour une coupe nette,
-              une barbe précise et une signature élégante.
+              {t.footer.description}
             </p>
 
             <div className="mt-10">
@@ -558,7 +517,7 @@ function Footer({
                 onClick={onBookNow}
                 className="group inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 text-[15px] font-[700] text-black transition duration-300 hover:-translate-y-[1px] hover:bg-[#f6f6f6]"
               >
-                <span>Réserver maintenant</span>
+                <span>{t.footer.book}</span>
 
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-strong)] text-white transition duration-300 group-hover:translate-x-1">
                   <svg
@@ -589,7 +548,7 @@ function Footer({
           {/* CENTER */}
           <div className="lg:col-span-2 lg:pt-7">
             <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
-              Navigation
+              {t.footer.navigation}
             </div>
 
             <nav className="space-y-4">
@@ -598,7 +557,7 @@ function Footer({
                 className="group flex w-fit items-center gap-3 text-[18px] font-[500] text-white/92 transition hover:text-white"
               >
                 <span className="h-[1px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-6" />
-                Accueil
+                {t.footer.home}
               </a>
 
               <a
@@ -606,7 +565,7 @@ function Footer({
                 className="group flex w-fit items-center gap-3 text-[18px] font-[400] text-white/62 transition hover:text-white"
               >
                 <span className="h-[1px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-6" />
-                Services
+                {t.footer.services}
               </a>
 
               <a
@@ -614,7 +573,7 @@ function Footer({
                 className="group flex w-fit items-center gap-3 text-[18px] font-[400] text-white/62 transition hover:text-white"
               >
                 <span className="h-[1px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-6" />
-                Galerie
+                {t.footer.gallery}
               </a>
 
               <a
@@ -622,7 +581,7 @@ function Footer({
                 className="group flex w-fit items-center gap-3 text-[18px] font-[400] text-white/62 transition hover:text-white"
               >
                 <span className="h-[1px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-6" />
-                Contact
+                {t.footer.contact}
               </a>
 
               <button
@@ -630,7 +589,7 @@ function Footer({
                 onClick={onToggleLang}
                 className="pt-5 text-[16px] font-[500] text-white/55 transition hover:text-[var(--accent)]"
               >
-                {lang === "fr" ? "EN" : "FR"}
+                {language === "fr" ? "EN" : "FR"}
               </button>
             </nav>
           </div>
@@ -638,7 +597,7 @@ function Footer({
           {/* RIGHT */}
           <div className="lg:col-span-4 lg:pt-7">
             <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
-              Contact
+              {t.footer.contactTitle}
             </div>
 
             <a
@@ -651,7 +610,7 @@ function Footer({
             <div className="mt-10 grid gap-4">
               <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-6">
                 <div className="mb-3 text-[10px] font-medium uppercase tracking-[0.30em] text-white/42">
-                  Emplacement
+                  {t.footer.location}
                 </div>
 
                 <div className="text-[14px] font-[700] uppercase tracking-[0.18em] text-[var(--accent)]">
@@ -659,23 +618,23 @@ function Footer({
                 </div>
 
                 <div className="mt-4 text-[18px] font-[400] leading-[1.8] text-white/72">
-                  3733 Rue Notre-Dame O,
+                  {t.footer.addressLine1}
                   <br />
-                  Montréal, QC H4C 1P8
+                  {t.footer.addressLine2}
                 </div>
               </div>
 
               <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-6">
                 <div className="mb-3 text-[10px] font-medium uppercase tracking-[0.30em] text-white/42">
-                  Horaires
+                  {t.footer.hours}
                 </div>
 
                 <div className="text-[18px] font-[400] leading-[2] text-white/72">
-                  Lun - Ven : 10h à 19h
+                  {t.footer.hoursLine1}
                   <br />
-                  Samedi : 10h à 18h
+                  {t.footer.hoursLine2}
                   <br />
-                  Dimanche : Fermé
+                  {t.footer.hoursLine3}
                 </div>
               </div>
             </div>
@@ -701,8 +660,7 @@ function Footer({
 
               <div className="lg:col-span-4 lg:pb-5">
                 <p className="max-w-[420px] text-[18px] font-[400] leading-[1.8] text-white/40">
-                  Un style intemporel, une finition précise et une identité
-                  moderne pensée pour ceux qui veulent plus qu’une simple coupe.
+                  {t.footer.brandText}
                 </p>
               </div>
             </div>
@@ -728,7 +686,7 @@ function Footer({
 
                 <div className="h-[220px] w-full sm:h-[260px] lg:h-[300px]">
                   <iframe
-                    title="Carte Salon Barbe Blanche"
+                    title={t.footer.mapTitle}
                     src="https://www.google.com/maps?q=3733+Rue+Notre-Dame+Ouest,+Montréal,+QC+H4C+1P8&z=15&output=embed"
                     className="h-full w-full grayscale contrast-125 brightness-75 saturate-0 transition duration-500 group-hover:scale-[1.02]"
                     loading="lazy"
@@ -743,7 +701,6 @@ function Footer({
         {/* BOTTOM BAR */}
         <div className="mt-14 border-t border-white/10 pt-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            {/* LEFT SIDE */}
             <div className="flex flex-col gap-5">
               <a
                 href="https://offclassicstudio.com"
@@ -751,7 +708,7 @@ function Footer({
                 rel="noreferrer"
                 className="w-fit text-[12px] font-[500] uppercase tracking-[0.34em] text-white/45 transition hover:text-[var(--accent)]"
               >
-                Made by OffClassic Studio
+                {t.footer.madeBy}
               </a>
 
               <div className="flex flex-col items-start gap-4">
@@ -771,6 +728,7 @@ function Footer({
                       <path d="M16.9 2H13.7V14.2C13.7 15.7 12.5 16.9 11 16.9C9.5 16.9 8.3 15.7 8.3 14.2C8.3 12.8 9.4 11.6 10.9 11.5V8.3C7.6 8.4 5 11 5 14.2C5 17.5 7.7 20.2 11 20.2C14.3 20.2 17 17.5 17 14.2V8.1C18.2 9 19.7 9.6 21.3 9.6V6.4C18.9 6.3 16.9 4.4 16.9 2Z" />
                     </svg>
                   </span>
+
                   <span>TikTok</span>
                 </a>
 
@@ -805,18 +763,14 @@ function Footer({
                       />
                     </svg>
                   </span>
+
                   <span>Instagram</span>
                 </a>
               </div>
             </div>
-
-            {/* RIGHT SIDE */}
-     
           </div>
         </div>
       </div>
     </footer>
   );
-
-
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 function useInView<T extends HTMLElement>(threshold = 0.18) {
   const ref = useRef<T | null>(null);
@@ -79,7 +80,13 @@ function AnimatedWordLine({
   );
 }
 
-function GoogleBadge({ isVisible }: { isVisible: boolean }) {
+function GoogleBadge({
+  isVisible,
+  reviewText,
+}: {
+  isVisible: boolean;
+  reviewText: string;
+}) {
   return (
     <div
       className={[
@@ -99,10 +106,11 @@ function GoogleBadge({ isVisible }: { isVisible: boolean }) {
         <div className="text-[16px] tracking-[0.1em] text-[#ffb400] sm:text-[20px]">
           ★★★★★
         </div>
+
         <div className="text-[16px] font-semibold text-[#2e2e2e] sm:text-[18px]">
           5/5{" "}
           <span className="font-normal text-[#2e2e2e]/70">
-            Basé sur 210 avis 
+            {reviewText}
           </span>
         </div>
       </div>
@@ -111,28 +119,29 @@ function GoogleBadge({ isVisible }: { isVisible: boolean }) {
 }
 
 export default function MissionSection() {
+  const { t, language } = useLanguage();
+
   const section = useInView<HTMLDivElement>(0.16);
   const rating = useInView<HTMLDivElement>(0.22);
   const image = useInView<HTMLDivElement>(0.22);
 
-  const line1 = "Chez Barbe Blanche, chaque";
-const line2 = "coupe est pensée comme une";
-const line3 = "expérience sur mesure. Un lieu où";
-const line4 = "la précision, le style et la confiance";
-const line5 = "se rencontrent.";
+  const specialWords =
+    language === "fr"
+      ? ["précision", "style", "confiance"]
+      : ["precision", "style", "confidence"];
 
   return (
     <section
       id="about"
       className="relative overflow-hidden bg-[#ece9e6] px-4 py-16 sm:px-6 lg:px-10 lg:py-28"
     >
-      {/* glow */}
+      {/* Glow */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute right-[6%] top-[10%] h-[260px] w-[260px] rounded-full bg-[radial-gradient(circle,_rgba(255,211,107,0.34)_0%,_rgba(255,166,120,0.22)_35%,_rgba(255,119,119,0.15)_55%,_transparent_75%)] blur-2xl sm:h-[380px] sm:w-[380px] lg:right-[8%] lg:top-[12%] lg:h-[560px] lg:w-[560px]" />
+        <div className="absolute right-[6%] top-[10%] h-[260px] w-[260px] rounded-full bg-[radial-gradient(circle,_rgba(210,180,120,0.30)_0%,_rgba(170,145,115,0.20)_35%,_rgba(120,110,100,0.12)_55%,_transparent_75%)] blur-2xl sm:h-[380px] sm:w-[380px] lg:right-[8%] lg:top-[12%] lg:h-[560px] lg:w-[560px]" />
       </div>
 
       <div ref={section.ref} className="relative mx-auto max-w-[1560px]">
-        {/* top labels */}
+        {/* Top labels */}
         <div
           className={[
             "mb-10 grid grid-cols-1 gap-3 text-[13px] font-medium transition-all duration-700 ease-out sm:mb-14 sm:grid-cols-3 sm:gap-6 sm:text-[14px]",
@@ -141,20 +150,24 @@ const line5 = "se rencontrent.";
               : "translate-y-6 opacity-0",
           ].join(" ")}
         >
-          <div className="text-left text-[#f08a4b]">✦ Qui sommes-nous ?</div>
-          <div className="text-left text-[#ff5b68] sm:text-center">
-            SALON BARBE BLANCHE © 2026
+          <div className="text-left text-[#9b6b3d]">
+            {t.mission.labelLeft}
           </div>
-          <div className="text-left text-[#f08a4b] sm:text-right">
-            3733 R. Notre Dame O, Montréal
+
+          <div className="text-left text-[#6f6f68] sm:text-center">
+            {t.mission.labelCenter}
+          </div>
+
+          <div className="text-left text-[#9b6b3d] sm:text-right">
+            {t.mission.labelRight}
           </div>
         </div>
 
-        {/* text */}
+        {/* Text */}
         <div className="mx-auto max-w-[1350px] text-center text-[#2e2e2e]">
           <h2 className="font-sans-modern text-[40px] font-[700] leading-[1.02] tracking-[-0.06em] sm:text-[56px] md:text-[74px] lg:text-[92px] xl:text-[104px]">
             <AnimatedWordLine
-              text={line1}
+              text={t.mission.line1}
               isVisible={section.isVisible}
               startDelay={0}
               step={0.085}
@@ -162,7 +175,7 @@ const line5 = "se rencontrent.";
             />
 
             <AnimatedWordLine
-              text={line2}
+              text={t.mission.line2}
               isVisible={section.isVisible}
               startDelay={0.42}
               step={0.085}
@@ -170,7 +183,7 @@ const line5 = "se rencontrent.";
             />
 
             <AnimatedWordLine
-              text={line3}
+              text={t.mission.line3}
               isVisible={section.isVisible}
               startDelay={0.9}
               step={0.085}
@@ -178,16 +191,16 @@ const line5 = "se rencontrent.";
             />
 
             <AnimatedWordLine
-              text={line4}
+              text={t.mission.line4}
               isVisible={section.isVisible}
               startDelay={1.35}
               step={0.085}
-              specialWords={["personnalité", "connexions"]}
+              specialWords={specialWords}
               className="mb-[0.06em] text-[34px] leading-[1.04] tracking-[-0.04em] sm:text-[46px] md:text-[58px] lg:text-[74px] xl:text-[82px]"
             />
 
             <AnimatedWordLine
-              text={line5}
+              text={t.mission.line5}
               isVisible={section.isVisible}
               startDelay={1.9}
               step={0.085}
@@ -195,12 +208,15 @@ const line5 = "se rencontrent.";
             />
           </h2>
 
-          {/* google */}
+          {/* Google badge */}
           <div ref={rating.ref} className="mt-10 flex justify-center sm:mt-12">
-            <GoogleBadge isVisible={rating.isVisible} />
+            <GoogleBadge
+              isVisible={rating.isVisible}
+              reviewText={t.mission.reviews}
+            />
           </div>
 
-          {/* image */}
+          {/* Image */}
           <div
             ref={image.ref}
             className={[

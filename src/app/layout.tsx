@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import ScrollFix from "./components/ScrollFix";
+import { LanguageProvider } from "./context/LanguageContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,8 +27,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
-        <ScrollFix />
-        {children}
+        <LanguageProvider>
+          <ScrollFix />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
