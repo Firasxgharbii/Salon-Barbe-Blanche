@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, {
@@ -153,7 +152,7 @@ const translations = {
     hero: {
       eyebrow: "Welcome to Barbe Blanche",
       titleTop: "Salon",
-      titleBottom: "Grooming",
+      titleBottom: "Modern",
       signature: "Barbe Blanche",
       subtitle: "A premium barbershop in the heart of Montreal",
       book: "Book now",
@@ -258,9 +257,12 @@ const translations = {
       addressLine1: "3733 Notre-Dame St W,",
       addressLine2: "Montreal, QC H4C 1P8",
       hours: "Hours",
-      hoursLine1: "Mon - Fri: 10 AM to 7 PM",
+
+      // ✅ Horaires anglais corrigés pour correspondre au français
+      hoursLine1: "Sunday - Friday: 11 AM to 8 PM",
       hoursLine2: "Saturday: 10 AM to 6 PM",
-      hoursLine3: "Sunday: Closed",
+      hoursLine3: "Monday: Closed",
+
       brandText:
         "A timeless style, a precise finish and a modern identity designed for those who want more than just a haircut.",
       mapTitle: "Salon Barbe Blanche Map",
