@@ -7,8 +7,8 @@ import MissionSection from "./components/MissionSection";
 import OffersSection from "./components/OffersSection";
 import GallerySection from "./components/GallerySection";
 import ScrollToTop from "./components/ScrollToTop";
-import PortfolioSection from "./components/PortfolioSection";
-import ArtExecutionSection from "./components/ArtExecutionSection";
+
+
 import BrandsStatementSection from "./components/BrandsStatementSection";
 import SectionReveal from "./components/SectionReveal";
 
@@ -76,17 +76,13 @@ export default function Home() {
         <OffersSection />
       </SectionReveal>
 
-      <SectionReveal variant="zoomIn">
-        <PortfolioSection />
-      </SectionReveal>
+     
 
       <SectionReveal variant="rotateUp">
         <BrandsStatementSection />
       </SectionReveal>
 
-      <SectionReveal variant="zoomOut">
-        <ArtExecutionSection />
-      </SectionReveal>
+
 
       <SectionReveal variant="splitRise">
         <GallerySection />
@@ -604,7 +600,7 @@ function Footer({
               href="tel:+15147976544"
               className="inline-block text-[42px] font-[800] tracking-[-0.05em] text-white transition hover:text-[var(--accent)] sm:text-[48px]"
             >
-              (514) 797-6544
+              (514) 797-6454
             </a>
 
             <div className="mt-10 grid gap-4">

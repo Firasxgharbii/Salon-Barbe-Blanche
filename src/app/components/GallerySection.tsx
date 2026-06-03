@@ -5,20 +5,18 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
 const IMAGES = [
-  "/gallery/Barbe Blanche-89.JPG",
+  
   "/gallery/Barbe Blanche-86.JPG",
-  "/gallery/Barbe Blanche-1.JPG",
+  
   "/gallery/Barbe Blanche-4.JPG",
+  "/gallery/Barbe Blanche-89.JPG",
   "/gallery/Barbe Blanche-5.JPG",
+  
   "/gallery/Barbe Blanche-19.JPG",
   "/gallery/Barbe Blanche-21.JPG",
-  "/gallery/Barbe Blanche-22.JPG",
-  "/gallery/Barbe Blanche-33.JPG",
   "/gallery/Barbe Blanche-46.JPG",
-  "/gallery/Barbe Blanche-49.JPG",
+  
   "/gallery/Barbe Blanche-50.JPG",
-  "/gallery/Barbe Blanche-95.JPG",
-  "/gallery/Barbe Blanche-96.JPG",
   "/gallery/Barbe Blanche-97.JPG",
   "/gallery/Barbe Blanche-99.JPG",
 ];

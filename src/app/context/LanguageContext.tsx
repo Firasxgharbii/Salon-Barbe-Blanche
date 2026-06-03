@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, {
@@ -22,7 +23,7 @@ const translations = {
 
     hero: {
       eyebrow: "Bienvenue chez Barbe Blanche",
-      titleTop: "Le Grooming Moderne",
+      titleTop: "Salon",
       titleBottom: "Moderne",
       signature: "Barbe Blanche",
       subtitle: "Un salon premium au cœur de Montréal",
@@ -130,9 +131,9 @@ const translations = {
       addressLine1: "3733 Rue Notre-Dame O,",
       addressLine2: "Montréal, QC H4C 1P8",
       hours: "Horaires",
-      hoursLine1: "Lun - Ven : 10h à 19h",
+      hoursLine1: "Dimanche - vendredi : 11h à 20h",
       hoursLine2: "Samedi : 10h à 18h",
-      hoursLine3: "Dimanche : Fermé",
+      hoursLine3: "Lundi : Fermé",
       brandText:
         "Un style intemporel, une finition précise et une identité moderne pensée pour ceux qui veulent plus qu’une simple coupe.",
       mapTitle: "Carte Salon Barbe Blanche",
@@ -151,7 +152,7 @@ const translations = {
 
     hero: {
       eyebrow: "Welcome to Barbe Blanche",
-      titleTop: "Modern Grooming",
+      titleTop: "Salon",
       titleBottom: "Grooming",
       signature: "Barbe Blanche",
       subtitle: "A premium barbershop in the heart of Montreal",

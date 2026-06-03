@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import PortfolioSection from "./PortfolioSection";
 
 function useInView<T extends HTMLElement>(threshold = 0.18) {
   const ref = useRef<T | null>(null);
@@ -35,23 +36,18 @@ function AnimatedWordLine({
   startDelay = 0,
   step = 0.08,
   className = "",
-  specialWords = [],
 }: {
   text: string;
   isVisible: boolean;
   startDelay?: number;
   step?: number;
   className?: string;
-  specialWords?: string[];
 }) {
   const words = text.split(" ");
 
   return (
     <div className={className}>
       {words.map((word, index) => {
-        const cleanWord = word.toLowerCase().replace(/[.,!?;:]/g, "");
-        const isSpecial = specialWords.includes(cleanWord);
-
         return (
           <span
             key={`${word}-${index}`}
@@ -59,11 +55,10 @@ function AnimatedWordLine({
           >
             <span
               className={[
-                "inline-block transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                "inline-block font-sans-modern font-[700] not-italic transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
                 isVisible
                   ? "translate-y-0 opacity-100 blur-0"
                   : "translate-y-[120%] opacity-0 blur-[8px]",
-                isSpecial ? "font-display italic font-medium" : "",
               ].join(" ")}
               style={{
                 transitionDelay: isVisible
@@ -119,16 +114,11 @@ function GoogleBadge({
 }
 
 export default function MissionSection() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const section = useInView<HTMLDivElement>(0.16);
   const rating = useInView<HTMLDivElement>(0.22);
-  const image = useInView<HTMLDivElement>(0.22);
-
-  const specialWords =
-    language === "fr"
-      ? ["précision", "style", "confiance"]
-      : ["precision", "style", "confidence"];
+  const portfolio = useInView<HTMLDivElement>(0.16);
 
   return (
     <section
@@ -195,8 +185,7 @@ export default function MissionSection() {
               isVisible={section.isVisible}
               startDelay={1.35}
               step={0.085}
-              specialWords={specialWords}
-              className="mb-[0.06em] text-[34px] leading-[1.04] tracking-[-0.04em] sm:text-[46px] md:text-[58px] lg:text-[74px] xl:text-[82px]"
+              className="mb-[0.06em]"
             />
 
             <AnimatedWordLine
@@ -204,7 +193,7 @@ export default function MissionSection() {
               isVisible={section.isVisible}
               startDelay={1.9}
               step={0.085}
-              className="text-[34px] leading-[1.04] tracking-[-0.04em] sm:text-[46px] md:text-[58px] lg:text-[74px] xl:text-[82px]"
+              className="mb-[0.06em]"
             />
           </h2>
 
@@ -215,25 +204,20 @@ export default function MissionSection() {
               reviewText={t.mission.reviews}
             />
           </div>
+        </div>
 
-          {/* Image */}
-          <div
-            ref={image.ref}
-            className={[
-              "mx-auto mt-10 max-w-[860px] transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] sm:mt-14",
-              image.isVisible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-14 opacity-0",
-            ].join(" ")}
-          >
-            <div className="overflow-hidden rounded-[24px] border border-white/50 bg-white/25 p-2 shadow-[0_24px_60px_rgba(0,0,0,0.06)] backdrop-blur-sm sm:rounded-[30px] sm:p-3">
-              <img
-                src="/gallery/logo.JPG"
-                alt="Salon Barbe Blanche"
-                className="h-[240px] w-full rounded-[18px] object-cover transition duration-700 hover:scale-[1.02] sm:h-[360px] sm:rounded-[24px] lg:h-[520px]"
-              />
-            </div>
-          </div>
+        {/* Portfolio */}
+        <div
+          id="portfolio"
+          ref={portfolio.ref}
+          className={[
+            "mt-14 transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] sm:mt-20",
+            portfolio.isVisible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-14 opacity-0",
+          ].join(" ")}
+        >
+          <PortfolioSection />
         </div>
       </div>
     </section>
