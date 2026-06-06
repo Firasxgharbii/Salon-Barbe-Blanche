@@ -8,6 +8,7 @@ import OffersSection from "./components/OffersSection";
 import GallerySection from "./components/GallerySection";
 import ScrollToTop from "./components/ScrollToTop";
 
+
 import BrandsStatementSection from "./components/BrandsStatementSection";
 import SectionReveal from "./components/SectionReveal";
 
@@ -55,8 +56,6 @@ export default function Home() {
         t={t}
       />
 
-      <PromoPopup onBookNow={openSquareBooking} />
-
       <MobileMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
@@ -77,9 +76,13 @@ export default function Home() {
         <OffersSection />
       </SectionReveal>
 
+     
+
       <SectionReveal variant="rotateUp">
         <BrandsStatementSection />
       </SectionReveal>
+
+
 
       <SectionReveal variant="splitRise">
         <GallerySection />
@@ -95,100 +98,6 @@ export default function Home() {
       <MobileBookNow onBookNow={openSquareBooking} t={t} />
       <ScrollToTop />
     </main>
-  );
-}
-
-/* ===================== PROMO POPUP ===================== */
-
-function PromoPopup({ onBookNow }: { onBookNow: () => void }) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpen(true);
-    }, 700);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!open) return null;
-
-  return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
-      <div className="relative grid w-full max-w-[760px] overflow-hidden rounded-[12px] bg-white shadow-[0_30px_100px_rgba(0,0,0,0.50)] md:grid-cols-2">
-        <button
-          type="button"
-          onClick={() => setOpen(false)}
-          className="absolute left-4 top-4 z-30 flex h-8 w-8 items-center justify-center rounded-full text-xl font-bold text-black transition hover:bg-black/10"
-          aria-label="Fermer"
-        >
-          ×
-        </button>
-
-        <div className="flex min-h-[320px] flex-col items-center justify-center px-8 py-12 text-center">
-          <div className="text-[34px] font-[900] uppercase leading-[0.95] tracking-[-0.04em] text-black sm:text-[40px]">
-            15% RABAIS
-            <br />
-            SUR VOTRE
-            <br />
-            PREMIÈRE VISITE
-          </div>
-
-          <p className="mt-4 text-[15px] font-medium text-black/70">
-            Offre valide pour une durée limitée
-          </p>
-
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              onBookNow();
-            }}
-            className="mt-7 rounded-full bg-black px-7 py-4 text-[13px] font-[800] uppercase tracking-[0.14em] text-white transition hover:-translate-y-[1px] hover:bg-black/85"
-          >
-            Réserver maintenant
-          </button>
-        </div>
-
-        <div className="relative min-h-[340px] bg-black">
-          <Image
-            src="/Karim.jpeg"
-            alt="Salon Barbe Blanche promotion"
-            fill
-            className="object-cover opacity-80"
-            sizes="(max-width: 768px) 100vw, 380px"
-          />
-
-          <div className="absolute inset-0 bg-black/35" />
-
-          <div className="relative z-10 flex h-full min-h-[340px] flex-col justify-between p-6 text-white">
-            <div>
-              <div className="text-[28px] font-[900] uppercase leading-none tracking-[-0.04em]">
-                BARBE BLANCHE
-              </div>
-
-              <div className="mt-2 text-[14px] font-medium italic text-white/85">
-                Salon pour hommes
-              </div>
-            </div>
-
-            <div>
-              <div className="text-[88px] font-[900] leading-none tracking-[-0.08em] text-white sm:text-[104px]">
-                15<span className="text-[42px] align-top">%</span>
-              </div>
-
-              <div className="mt-1 text-[30px] font-[900] uppercase italic leading-none text-white">
-                Rabais
-              </div>
-
-              <div className="mt-3 text-[13px] font-[700] uppercase tracking-[0.18em] text-white/85">
-                Sur votre première visite
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -439,6 +348,7 @@ function Hero({
       id="home"
       className="relative min-h-[100svh] w-full overflow-hidden bg-[#06070a]"
     >
+      {/* IMAGE MOBILE */}
       <div className="absolute inset-0 md:hidden">
         <Image
           src="/gallery/10.JPG"
@@ -451,6 +361,7 @@ function Hero({
         />
       </div>
 
+      {/* IMAGE DESKTOP */}
       <div className="absolute inset-0 hidden md:block">
         <Image
           src="/gallery/10.JPG"
@@ -463,11 +374,15 @@ function Hero({
         />
       </div>
 
+      {/* OVERLAYS */}
       <div className="absolute inset-0 bg-black/55 md:bg-black/50" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/40 to-black/75" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06)_0%,transparent_58%)]" />
+
+      {/* VIGNETTE */}
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.28)_0%,rgba(0,0,0,0.08)_35%,rgba(0,0,0,0.08)_65%,rgba(0,0,0,0.30)_100%)] md:bg-[linear-gradient(90deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0.12)_38%,rgba(0,0,0,0.12)_62%,rgba(0,0,0,0.35)_100%)]" />
 
+      {/* LOGO GHOST */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="relative h-[240px] w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[520px] lg:w-[520px]">
           <Image
@@ -479,6 +394,7 @@ function Hero({
         </div>
       </div>
 
+      {/* CONTENT */}
       <div className="relative z-10 flex min-h-[100svh] items-center justify-center px-5 pb-24 pt-24 sm:px-8 md:px-10 lg:px-16">
         <div className="mx-auto flex w-full max-w-[1200px] justify-center text-center">
           <div className="max-w-[980px]">
@@ -519,6 +435,7 @@ function Hero({
         </div>
       </div>
 
+      {/* BOTTOM FADE */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#06070a] to-transparent" />
     </section>
   );
@@ -564,6 +481,7 @@ function Footer({
       id="contact"
       className="relative overflow-hidden border-t border-white/10 bg-[var(--footer-bg)] text-[var(--footer-text)]"
     >
+      {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-[#d6dbe0]/[0.08] blur-3xl" />
         <div className="absolute bottom-0 right-0 h-[32rem] w-[32rem] rounded-full bg-[#9ea3ab]/[0.08] blur-3xl" />
@@ -571,7 +489,9 @@ function Footer({
       </div>
 
       <div className="relative mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 lg:px-16 lg:py-24">
+        {/* TOP SECTION */}
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
+          {/* LEFT */}
           <div className="lg:col-span-6">
             <div className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-white/35">
               {t.footer.eyebrow}
@@ -596,31 +516,67 @@ function Footer({
                 <span>{t.footer.book}</span>
 
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-strong)] text-white transition duration-300 group-hover:translate-x-1">
-                  →
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      d="M5 12h12"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M13 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </span>
               </button>
             </div>
           </div>
 
+          {/* CENTER */}
           <div className="lg:col-span-2 lg:pt-7">
             <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
               {t.footer.navigation}
             </div>
 
             <nav className="space-y-4">
-              <a href="#home" className="block text-[18px] font-[500] text-white/92">
+              <a
+                href="#home"
+                className="group flex w-fit items-center gap-3 text-[18px] font-[500] text-white/92 transition hover:text-white"
+              >
+                <span className="h-[1px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-6" />
                 {t.footer.home}
               </a>
 
-              <a href="#services" className="block text-[18px] font-[400] text-white/62">
+              <a
+                href="#services"
+                className="group flex w-fit items-center gap-3 text-[18px] font-[400] text-white/62 transition hover:text-white"
+              >
+                <span className="h-[1px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-6" />
                 {t.footer.services}
               </a>
 
-              <a href="#gallery" className="block text-[18px] font-[400] text-white/62">
+              <a
+                href="#gallery"
+                className="group flex w-fit items-center gap-3 text-[18px] font-[400] text-white/62 transition hover:text-white"
+              >
+                <span className="h-[1px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-6" />
                 {t.footer.gallery}
               </a>
 
-              <a href="#contact" className="block text-[18px] font-[400] text-white/62">
+              <a
+                href="#contact"
+                className="group flex w-fit items-center gap-3 text-[18px] font-[400] text-white/62 transition hover:text-white"
+              >
+                <span className="h-[1px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-6" />
                 {t.footer.contact}
               </a>
 
@@ -634,6 +590,7 @@ function Footer({
             </nav>
           </div>
 
+          {/* RIGHT */}
           <div className="lg:col-span-4 lg:pt-7">
             <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
               {t.footer.contactTitle}
@@ -680,6 +637,7 @@ function Footer({
           </div>
         </div>
 
+        {/* BRAND SECTION */}
         <div className="mt-24 lg:mt-28">
           <div className="relative border-t border-white/8 pt-12">
             <div className="absolute left-0 top-0 h-px w-40 bg-gradient-to-r from-[var(--accent)] to-transparent" />
@@ -703,6 +661,7 @@ function Footer({
               </div>
             </div>
 
+            {/* MAP */}
             <div className="mt-10">
               <div className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.03] shadow-[0_20px_80px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_100px_rgba(0,0,0,0.45)]">
                 <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-black/10 to-black/45" />
@@ -735,6 +694,7 @@ function Footer({
           </div>
         </div>
 
+        {/* BOTTOM BAR */}
         <div className="mt-14 border-t border-white/10 pt-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-col gap-5">
@@ -754,6 +714,17 @@ function Footer({
                   rel="noreferrer"
                   className="group inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.02] px-4 py-3 text-[15px] font-[500] text-white/65 transition hover:border-[var(--accent)]/35 hover:bg-white/[0.05] hover:text-white"
                 >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="h-4 w-4"
+                    >
+                      <path d="M16.9 2H13.7V14.2C13.7 15.7 12.5 16.9 11 16.9C9.5 16.9 8.3 15.7 8.3 14.2C8.3 12.8 9.4 11.6 10.9 11.5V8.3C7.6 8.4 5 11 5 14.2C5 17.5 7.7 20.2 11 20.2C14.3 20.2 17 17.5 17 14.2V8.1C18.2 9 19.7 9.6 21.3 9.6V6.4C18.9 6.3 16.9 4.4 16.9 2Z" />
+                    </svg>
+                  </span>
+
                   <span>TikTok</span>
                 </a>
 
@@ -763,6 +734,32 @@ function Footer({
                   rel="noreferrer"
                   className="group inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.02] px-4 py-3 text-[15px] font-[500] text-white/65 transition hover:border-[var(--accent)]/35 hover:bg-white/[0.05] hover:text-white"
                 >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="h-4 w-4"
+                    >
+                      <path
+                        d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                      />
+                      <path
+                        d="M12 16.2A4.2 4.2 0 1 0 12 7.8a4.2 4.2 0 0 0 0 8.4Z"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                      />
+                      <path
+                        d="M17.5 6.5h.1"
+                        stroke="currentColor"
+                        strokeWidth="2.6"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
+
                   <span>Instagram</span>
                 </a>
               </div>
