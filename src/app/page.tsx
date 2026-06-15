@@ -8,19 +8,37 @@ import OffersSection from "./components/OffersSection";
 import GallerySection from "./components/GallerySection";
 import ScrollToTop from "./components/ScrollToTop";
 
-
 import BrandsStatementSection from "./components/BrandsStatementSection";
 import SectionReveal from "./components/SectionReveal";
 
 import { useLanguage, type Translation } from "./context/LanguageContext";
 
+/** Google Ads */
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
 /** Square Booking */
 const SQUARE_BOOKING_URL =
   "https://book.squareup.com/appointments/78tpzxlw4jqmo4/location/LK9EBBZT64PRB/services";
 
+/** Google Ads conversion + ouverture Square */
 function openSquareBooking() {
   if (typeof window === "undefined") return;
-  window.open(SQUARE_BOOKING_URL, "_blank", "noopener,noreferrer");
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "conversion", {
+      send_to: "AW-18112760771/5jjRCJPStL0cEMOX67xD",
+      value: 1.0,
+      currency: "CAD",
+    });
+  }
+
+  setTimeout(() => {
+    window.open(SQUARE_BOOKING_URL, "_blank", "noopener,noreferrer");
+  }, 300);
 }
 
 export default function Home() {
@@ -76,13 +94,9 @@ export default function Home() {
         <OffersSection />
       </SectionReveal>
 
-     
-
       <SectionReveal variant="rotateUp">
         <BrandsStatementSection />
       </SectionReveal>
-
-
 
       <SectionReveal variant="splitRise">
         <GallerySection />
@@ -348,7 +362,6 @@ function Hero({
       id="home"
       className="relative min-h-[100svh] w-full overflow-hidden bg-[#06070a]"
     >
-      {/* IMAGE MOBILE */}
       <div className="absolute inset-0 md:hidden">
         <Image
           src="/gallery/10.JPG"
@@ -361,7 +374,6 @@ function Hero({
         />
       </div>
 
-      {/* IMAGE DESKTOP */}
       <div className="absolute inset-0 hidden md:block">
         <Image
           src="/gallery/10.JPG"
@@ -374,15 +386,12 @@ function Hero({
         />
       </div>
 
-      {/* OVERLAYS */}
       <div className="absolute inset-0 bg-black/55 md:bg-black/50" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/40 to-black/75" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06)_0%,transparent_58%)]" />
 
-      {/* VIGNETTE */}
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.28)_0%,rgba(0,0,0,0.08)_35%,rgba(0,0,0,0.08)_65%,rgba(0,0,0,0.30)_100%)] md:bg-[linear-gradient(90deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0.12)_38%,rgba(0,0,0,0.12)_62%,rgba(0,0,0,0.35)_100%)]" />
 
-      {/* LOGO GHOST */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="relative h-[240px] w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[520px] lg:w-[520px]">
           <Image
@@ -394,7 +403,6 @@ function Hero({
         </div>
       </div>
 
-      {/* CONTENT */}
       <div className="relative z-10 flex min-h-[100svh] items-center justify-center px-5 pb-24 pt-24 sm:px-8 md:px-10 lg:px-16">
         <div className="mx-auto flex w-full max-w-[1200px] justify-center text-center">
           <div className="max-w-[980px]">
@@ -435,7 +443,6 @@ function Hero({
         </div>
       </div>
 
-      {/* BOTTOM FADE */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#06070a] to-transparent" />
     </section>
   );
@@ -481,7 +488,6 @@ function Footer({
       id="contact"
       className="relative overflow-hidden border-t border-white/10 bg-[var(--footer-bg)] text-[var(--footer-text)]"
     >
-      {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-[#d6dbe0]/[0.08] blur-3xl" />
         <div className="absolute bottom-0 right-0 h-[32rem] w-[32rem] rounded-full bg-[#9ea3ab]/[0.08] blur-3xl" />
@@ -489,9 +495,7 @@ function Footer({
       </div>
 
       <div className="relative mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 lg:px-16 lg:py-24">
-        {/* TOP SECTION */}
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
-          {/* LEFT */}
           <div className="lg:col-span-6">
             <div className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-white/35">
               {t.footer.eyebrow}
@@ -541,7 +545,6 @@ function Footer({
             </div>
           </div>
 
-          {/* CENTER */}
           <div className="lg:col-span-2 lg:pt-7">
             <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
               {t.footer.navigation}
@@ -590,7 +593,6 @@ function Footer({
             </nav>
           </div>
 
-          {/* RIGHT */}
           <div className="lg:col-span-4 lg:pt-7">
             <div className="mb-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
               {t.footer.contactTitle}
@@ -637,7 +639,6 @@ function Footer({
           </div>
         </div>
 
-        {/* BRAND SECTION */}
         <div className="mt-24 lg:mt-28">
           <div className="relative border-t border-white/8 pt-12">
             <div className="absolute left-0 top-0 h-px w-40 bg-gradient-to-r from-[var(--accent)] to-transparent" />
@@ -661,7 +662,6 @@ function Footer({
               </div>
             </div>
 
-            {/* MAP */}
             <div className="mt-10">
               <div className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.03] shadow-[0_20px_80px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_100px_rgba(0,0,0,0.45)]">
                 <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-black/10 to-black/45" />
@@ -694,7 +694,6 @@ function Footer({
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
         <div className="mt-14 border-t border-white/10 pt-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-col gap-5">

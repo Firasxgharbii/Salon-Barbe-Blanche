@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import Script from "next/script";
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
+        {/* Google Ads - Global Tag */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-18112760771"
           strategy="afterInteractive"
@@ -36,7 +38,8 @@ export default function RootLayout({
         <Script id="google-ads-tag" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            function gtag(){window.dataLayer.push(arguments);}
+            window.gtag = gtag;
             gtag('js', new Date());
             gtag('config', 'AW-18112760771');
           `}
