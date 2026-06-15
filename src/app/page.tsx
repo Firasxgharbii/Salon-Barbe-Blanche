@@ -30,7 +30,7 @@ function openSquareBooking() {
 
   if (typeof window.gtag === "function") {
     window.gtag("event", "conversion", {
-      send_to: "AW-18112760771/5jjRCJPStL0cEMOX67xD",
+     send_to: "AW-18112760771/-IoTCMfn578cEMOX67xD",
       value: 1.0,
       currency: "CAD",
     });
