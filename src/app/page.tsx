@@ -28,17 +28,37 @@ const SQUARE_BOOKING_URL =
 function openSquareBooking() {
   if (typeof window === "undefined") return;
 
-  if (typeof window.gtag === "function") {
-    window.gtag("event", "conversion", {
-     send_to: "AW-18112760771/-IoTCMfn578cEMOX67xD",
-      value: 1.0,
-      currency: "CAD",
-    });
-  }
+  let redirected = false;
 
-  setTimeout(() => {
-    window.open(SQUARE_BOOKING_URL, "_blank", "noopener,noreferrer");
-  }, 300);
+  const openBooking = () => {
+    if (redirected) return;
+
+    redirected = true;
+
+    window.open(
+      SQUARE_BOOKING_URL,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
+  try {
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: "AW-18112760771/5jjRCJPStL0cEMOX67xD",
+        value: 1.0,
+        currency: "CAD",
+        event_callback: openBooking,
+      });
+
+     window.setTimeout(openBooking, 1000);
+    } else {
+      openBooking();
+    }
+  } catch (error) {
+    console.error("Google Ads Conversion Error:", error);
+    openBooking();
+  }
 }
 
 export default function Home() {
